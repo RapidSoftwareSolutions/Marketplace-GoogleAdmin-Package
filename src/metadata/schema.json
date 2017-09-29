@@ -474,7 +474,7 @@
         {
           "name": "query",
           "type": "String",
-          "info": "Search string in the format given at View device information and organizational units (https:\/\/support.google.com\/chrome\/a\/answer\/1698333?hl=en)",
+          "info": "Search string in the format given at View device information and organizational units",
           "required": false
         },
         {
@@ -2991,6 +2991,12 @@
           "name": "resourceName",
           "type": "String",
           "info": "The name of the calendar resource. For example, Training Room 1A",
+          "required": true
+        },
+        {
+          "name": "calendarResourceId",
+          "type": "String",
+          "info": "The unique ID for the calendar resource.",
           "required": true
         },
         {

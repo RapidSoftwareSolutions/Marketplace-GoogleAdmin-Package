@@ -4,7 +4,7 @@ $app->post('/api/GoogleAdmin/addCalendarResource', function ($request, $response
 
     $settings = $this->settings;
     $checkRequest = $this->validation;
-    $validateRes = $checkRequest->validate($request, ['accessToken','accountId','resourceName']);
+    $validateRes = $checkRequest->validate($request, ['accessToken','accountId','resourceName', 'calendarResourceId']);
 
     if(!empty($validateRes) && isset($validateRes['callback']) && $validateRes['callback']=='error') {
         return $response->withHeader('Content-type', 'application/json')->withStatus(200)->withJson($validateRes);
@@ -12,10 +12,10 @@ $app->post('/api/GoogleAdmin/addCalendarResource', function ($request, $response
         $post_data = $validateRes;
     }
 
-    $requiredParams = ['accessToken'=>'accessToken','accountId'=>'accountId','resourceName'=>'resourceName'];
+    $requiredParams = ['accessToken'=>'accessToken','accountId'=>'accountId','resourceName'=>'resourceName', 'calendarResourceId'=> 'calendarResourceId'];
     $optionalParams = ['resourceDescription'=>'resourceDescription','resourceType'=>'resourceType'];
     $bodyParams = [
-       'json' => ['resourceName','resourceDescription','resourceType']
+       'json' => ['resourceName','resourceDescription','resourceType', 'calendarResourceId']
     ];
 
     $data = \Models\Params::createParams($requiredParams, $optionalParams, $post_data['args']);

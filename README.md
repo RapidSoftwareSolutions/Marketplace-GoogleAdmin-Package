@@ -539,6 +539,7 @@ Inserts a calendar resource.
 |--------------------|-------|----------
 | accessToken        | String| OAuth 2.0 token for the current user.
 | accountId          | String| The unique ID for the customer's G Suite account. The customerId is also returned as part of the Users resource.
+| calendarResourceId | String| The unique ID of the calendar resource to delete.
 | resourceName       | String| The name of the calendar resource. For example, Training Room 1A
 | resourceDescription| String| The brief description of the calendar resource.
 | resourceType       | String| The type of the calendar resource. Used for grouping resources in the calendar user interface.
