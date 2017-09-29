@@ -19,7 +19,7 @@ $app->post('/api/GoogleAdmin/getAccessToken', function ($request, $response) {
     ];
 
     $data = \Models\Params::createParams($requiredParams, $optionalParams, $post_data['args']);
-    $data['grantType'] =
+    $data['grant_type'] = 'authorization_code';
     
 
     $client = $this->httpClient;

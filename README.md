@@ -3,7 +3,7 @@
 # GoogleAdmin Package
 Use the Admin API to create and manage users and groups for a domain, along with their aliases. Programmatically access the functionality found at the Admin console Organization and users tab.
 * Domain: [GoogleAdmin](http://gsuite.com/)
-* Credentials: apiKey, apiSecret
+* Credentials: clientId, clientSecret
 
 ## How to get credentials: 
 0. Go to [Google Developers Console](https://console.developers.google.com/?authuser=1);
