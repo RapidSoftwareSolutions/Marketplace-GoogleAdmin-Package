@@ -1,0 +1,5736 @@
+{
+  "package": "GoogleAdmin",
+  "tagline": "GoogleAdmin API",
+  "description": "Use the Admin API to create and manage users and groups for a domain, along with their aliases. Programmatically access the functionality found at the Admin console Organization and users tab.",
+  "image": "https:\/\/logo.clearbit.com\/google.com",
+  "repo": "https:\/\/github.com\/RapidSoftwareSolutions\/Marketplace-GoogleAdmin-Package",
+  "keywords": [
+    "API",
+    "google",
+    "directory",
+    "gsuite",
+    "administration"
+  ],
+  "accounts": {
+    "domain": "gsuite.com\/",
+    "credentials": [
+      "apiKey",
+      "apiSecret"
+    ]
+  },
+  "steps":[
+    "Go to Google Developers Console https://console.developers.google.com/",
+    "Select a project, or create a new one.",
+    "Press Continue to activate API key.",
+    "In the sidebar on the left, select Credentials",
+    "If your project has no API key for the server, create it now - Add credentials > API key > Server key",
+    "Direct user to https://accounts.google.com/o/oauth2/v2/auth?client_id=CLIENT_ID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPES",
+    "After choosing the account and pressing ALLOW user will be redirected to your REDIRECT_URI with accessToken as parameter"
+  ],
+  "blocks": [
+    {
+      "name": "getAccessToken",
+      "description": "Exchange code for access token.",
+      "args": [
+        {
+          "name": "clientId",
+          "type": "credentials",
+          "info": "The client ID that you obtain from the API Console, as described in Obtain OAuth 2.0 credentials.",
+          "required": true,
+          "vendorSchema": {
+            "name": "client_id"
+          }
+        },
+        {
+          "name": "clientSecret",
+          "type": "credentials",
+          "info": "The client secret that you obtain from the API Console, as described in Obtain OAuth 2.0 credentials.",
+          "required": true,
+          "vendorSchema": {
+            "name": "client_secret"
+          }
+        },
+        {
+          "name": "code",
+          "type": "String",
+          "info": "The authorization code that is returned from the initial request.",
+          "required": true
+        },
+        {
+          "name": "redirectUri",
+          "type": "String",
+          "info": "The URI that you specify in the API Console, as described in Set a redirect URI.",
+          "required": true,
+          "vendorSchema": {
+            "name": "redirect_uri"
+          }
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/oauth2\/v4\/token",
+        "method": "post",
+        "requestParameters": [
+          {
+            "type": "form_params",
+            "parameters": [
+              "code",
+              "client_id",
+              "client_secret",
+              "redirect_uri",
+              "grant_type"
+            ]
+          }
+        ]
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "deleteAsps",
+      "description": "Delete an ASP issued by a user. ",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "aspsId",
+          "type": "String",
+          "info": "The unique ID of the ASP to be deleted.",
+          "required": true
+        },
+        {
+          "name": "userKey",
+          "type": "String",
+          "info": "Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/users\/{$data['userKey']}\/asps\/{$data['aspsId']}",
+        "method": "delete",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "getAsps",
+      "description": "Get information about an ASP issued by a user.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "aspsId",
+          "type": "String",
+          "info": "The unique ID of the ASP to be deleted.",
+          "required": true
+        },
+        {
+          "name": "userKey",
+          "type": "String",
+          "info": "Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/users\/{$data['userKey']}\/asps\/{$data['aspsId']}",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "listAsps",
+      "description": "List the ASPs issued by a user.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "userKey",
+          "type": "String",
+          "info": "Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/users\/{$data['userKey']}\/asps\/",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "stopWatchingResource",
+      "description": "Stop watching resources through this channel",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "channelId",
+          "type": "String",
+          "info": "A UUID or similar unique string that identifies this channel.",
+          "required": true,
+          "vendorSchema": {
+            "name": "id"
+          }
+        },
+        {
+          "name": "resourceId",
+          "type": "String",
+          "info": "An opaque ID that identifies the resource being watched on this channel. Stable across different API versions.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/channels\/stop",
+        "method": "post",
+        "requestParameters": [
+          {
+            "type": "json",
+            "parameters": [
+              "id",
+              "resourceId"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "makeActionOnChromeosDevice",
+      "description": "Takes an action that affects a Chrome OS Device. This includes deprovisioning, disabling, and re-enabling devices.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "customerId",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account.",
+          "required": true
+        },
+        {
+          "name": "deviceId",
+          "type": "String",
+          "info": "An opaque ID that identifies the resource being watched on this channel. Stable across different API versions.",
+          "required": true
+        },
+        {
+          "name": "action",
+          "type": "Select",
+          "options": [
+            "deprovision",
+            "disable",
+            "reenable"
+          ],
+          "info": "Action to be taken on the Chrome OS device ",
+          "required": true
+        },
+        {
+          "name": "deprovisionReason",
+          "type": "String",
+          "options": [
+            "different_model_replacement",
+            "retiring_device",
+            "same_model_replacement"
+          ],
+          "info": "Only used when the action is deprovision.",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['customerId']}\/devices\/chromeos\/{$data['deviceId']}\/action",
+        "method": "post",
+        "requestParameters": [
+          {
+            "type": "json",
+            "parameters": [
+              "action",
+              "deprovisionReason"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "getSingleChromeosDevice",
+      "description": "Retrieves a Chrome OS device's properties.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "customerId",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account.",
+          "required": true
+        },
+        {
+          "name": "deviceId",
+          "type": "String",
+          "info": "An opaque ID that identifies the resource being watched on this channel. Stable across different API versions.",
+          "required": true
+        },
+        {
+          "name": "projection",
+          "type": "Select",
+          "options": [
+            "BASIC",
+            "FULL"
+          ],
+          "info": "Determines whether the response contains the full list of properties or only a subset. ",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['customerId']}\/devices\/chromeos\/{$data['deviceId']}",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": [
+              "projection"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "listChromeosDevices",
+      "description": "Retrieves a paginated list of Chrome OS devices within an account",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "customerId",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account.",
+          "required": true
+        },
+        {
+          "name": "orderBy",
+          "type": "Select",
+          "options": [
+            "annotatedLocation",
+            "annotatedUser",
+            "lastSync",
+            "notes",
+            "serialNumber",
+            "status",
+            "supportEndDate"
+          ],
+          "info": "Device property to use for sorting results. ",
+          "required": false
+        },
+        {
+          "name": "maxResults",
+          "type": "Number",
+          "info": "Maximum number of results to return. Default, and maximum, is 100.",
+          "required": false
+        },
+        {
+          "name": "orgUnitPath",
+          "type": "String",
+          "info": "The full path of the organization unit or its unique ID.",
+          "required": false
+        },
+        {
+          "name": "pageToken",
+          "type": "String",
+          "info": "The pageToken query parameter is used to request the next page of query results. ",
+          "required": false
+        },
+        {
+          "name": "projection",
+          "type": "Select",
+          "options": [
+            "BASIC",
+            "FULL"
+          ],
+          "info": "Determines whether the response contains the full list of properties or only a subset. ",
+          "required": false
+        },
+        {
+          "name": "query",
+          "type": "String",
+          "info": "Search string in the format given at View device information and organizational units (https:\/\/support.google.com\/chrome\/a\/answer\/1698333?hl=en)",
+          "required": false
+        },
+        {
+          "name": "sortOrder",
+          "type": "Select",
+          "options": [
+            "ASCENDING",
+            "DESCENDING"
+          ],
+          "info": "Whether to return results in ascending or descending order. Must be used with the orderBy parameter. ",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['customerId']}\/devices\/chromeos",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": [
+              "orderBy",
+              "maxResults",
+              "orgUnitPath",
+              "pageToken",
+              "projection",
+              "query",
+              "sortOrder"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "moveChromeosDevicesToOu",
+      "description": "Move or insert multiple Chrome OS devices to an Organization Unit. You can move up to 50 devices at once.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "customerId",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account.",
+          "required": true
+        },
+        {
+          "name": "orgUnitPath",
+          "type": "String",
+          "info": "Full path of the target organization unit or its ID",
+          "required": true
+        },
+        {
+          "name": "deviceIds",
+          "type": "List",
+          "structure": {
+            "name": "deviceId",
+            "type": "String",
+            "info": "Single device Id"
+          },
+          "info": "Chrome OS devices to be moved to OU",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['customerId']}\/devices\/chromeos\/moveDevicesToOu?orgUnitPath={$data['orgUnitPath']}",
+        "method": "post",
+        "requestParameters": [
+          {
+            "type": "json",
+            "parameters": [
+              "deviceIds"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "updateChromeosDevice",
+      "description": "Updates a device's annotatedUser, annotatedLocation, or notes properties.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "customerId",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account.",
+          "required": true
+        },
+        {
+          "name": "deviceId",
+          "type": "String",
+          "info": "An opaque ID that identifies the resource being watched on this channel. Stable across different API versions.",
+          "required": true
+        },
+        {
+          "name": "projection",
+          "type": "Select",
+          "options": [
+            "BASIC",
+            "FULL"
+          ],
+          "info": "Determines whether the response contains the full list of properties or only a subset. ",
+          "required": false
+        },
+        {
+          "name": "annotatedAssetId",
+          "type": "String",
+          "info": "The asset identifier as noted by an administrator or specified during enrollment.",
+          "required": false
+        },
+        {
+          "name": "annotatedLocation",
+          "type": "String",
+          "info": "The address or location of the device as noted by the administrator. Maximum length is 200 characters. Empty values are allowed.",
+          "required": false
+        },
+        {
+          "name": "notes",
+          "type": "String",
+          "info": "Notes about this device added by the administrator. This property can be searched with the list method's query parameter. Maximum length is 500 characters. Empty values are allowed.",
+          "required": false
+        },
+        {
+          "name": "orgUnitPath",
+          "type": "String",
+          "info": "The full parent path with the organization unit's name associated with the device. Path names are case insensitive.",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['customerId']}\/devices\/chromeos\/{$data['deviceId']}",
+        "method": "patch",
+        "requestParameters": [
+          {
+            "type": "json",
+            "parameters": [
+              "projection",
+              "annotatedAssetId",
+              "annotatedLocation",
+              "notes",
+              "orgUnitPath"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "getSingleCustomer",
+      "description": "Retrieves a customer. ",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "customerId",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customers\/{$data['customerId']}",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "updateCustomer",
+      "description": "Updates a customer.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "customerId",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account.",
+          "required": true
+        },
+        {
+          "name": "alternateEmail",
+          "type": "String",
+          "info": "The customer's secondary contact email address. This email address cannot be on the same domain as the customerDomain",
+          "required": false
+        },
+        {
+          "name": "customerDomain",
+          "type": "String",
+          "info": "The customer's primary domain name string. Do not include the www prefix when creating a new customer.",
+          "required": false
+        },
+        {
+          "name": "etag",
+          "type": "String",
+          "info": "ETag of the resource.",
+          "required": false
+        },
+        {
+          "name": "language",
+          "type": "String",
+          "info": "The customer's ISO 639-2 language code. See the Language Codes page for the list of supported codes. Valid language codes outside the supported set will be accepted by the API but may lead to unexpected behavior. The default value is en.",
+          "required": false
+        },
+        {
+          "name": "phoneNumber",
+          "type": "String",
+          "info": "The customer's contact phone number in E.164 format.",
+          "required": false
+        },
+        {
+          "name": "postalAddress",
+          "type": "JSON",
+          "info": "The JSON object with customer's postal address information.",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customers\/{$data['customerId']}",
+        "method": "patch",
+        "requestParameters": [
+          {
+            "type": "json",
+            "parameters": [
+              "alternateEmail",
+              "customerDomain",
+              "etag",
+              "language",
+              "phoneNumber",
+              "postalAddress"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "deleteDomainAlias",
+      "description": "Deletes a Domain Alias of the customer. ",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "Immutable ID of the G Suite account.",
+          "required": true
+        },
+        {
+          "name": "domainAliasName",
+          "type": "String",
+          "info": "Name of domain alias to be deleted.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/domainaliases\/{$data['domainAliasName']}",
+        "method": "delete",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "getSingleDomainAlias",
+      "description": "Retrieves a domain alias of the customer.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "Immutable ID of the G Suite account.",
+          "required": true
+        },
+        {
+          "name": "domainAliasName",
+          "type": "String",
+          "info": "Name of domain alias to be retrieved.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/domainaliases\/{$data['domainAliasName']}",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "addDomainAlias",
+      "description": "Inserts a Domain alias of the customer.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "Immutable ID of the G Suite account.",
+          "required": true
+        },
+        {
+          "name": "domainAliasName",
+          "type": "String",
+          "info": "Name of domain alias to be retrieved.",
+          "required": true
+        },
+        {
+          "name": "etag",
+          "type": "String",
+          "info": "ETag of the resource.",
+          "required": false
+        },
+        {
+          "name": "kind",
+          "type": "String",
+          "info": "Kind of the resource.",
+          "required": false
+        },
+        {
+          "name": "parentDomainName",
+          "type": "String",
+          "info": "The parent domain name that the domain alias is associated with. This can either be a primary or secondary domain name within a customer.",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/domainaliases",
+        "method": "post",
+        "requestParameters": [
+          {
+            "type": "json",
+            "parameters": [
+              "domainAliasName",
+              "etag",
+              "kind",
+              "parentDomainName"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "listDomainAliases",
+      "description": "Lists the domain aliases of the customer.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "Immutable ID of the G Suite account.",
+          "required": true
+        },
+        {
+          "name": "parentDomainName",
+          "type": "String",
+          "info": "The parent domain name that the domain alias is associated with. This can either be a primary or secondary domain name within a customer.",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/domainaliases",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": [
+              "parentDomainName"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "deleteDomain",
+      "description": "Deletes a Domain of the customer. ",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "Immutable ID of the G Suite account.",
+          "required": true
+        },
+        {
+          "name": "domainName",
+          "type": "String",
+          "info": "Name of domain to be deleted.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/domains\/{$data['domainName']}",
+        "method": "delete",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "getSingleDomain",
+      "description": "Retrieves a domain of the customer. ",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "Immutable ID of the G Suite account.",
+          "required": true
+        },
+        {
+          "name": "domainName",
+          "type": "String",
+          "info": "Name of domain to be deleted.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/domains\/{$data['domainName']}",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "addDomain",
+      "description": "Retrieves a domain of the customer. ",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "Immutable ID of the G Suite account.",
+          "required": true
+        },
+        {
+          "name": "domainName",
+          "type": "String",
+          "info": "Name of domain to be deleted.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/domains",
+        "method": "post",
+        "requestParameters": [
+          {
+            "type": "json",
+            "parameters": [
+              "domainName"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "listDomains",
+      "description": "Lists the domains of the customer.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "Immutable ID of the G Suite account.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/domains",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "deleteGroup",
+      "description": "Deletes a group.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "groupKey",
+          "type": "String",
+          "info": "Identifies the group in the API request. The value can be the group's email address, group alias, or the unique group ID.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/groups\/{$data['groupKey']}",
+        "method": "delete",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "getSingleGroup",
+      "description": "Retrieves a group's properties. ",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "groupKey",
+          "type": "String",
+          "info": "Identifies the group in the API request. The value can be the group's email address, group alias, or the unique group ID.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/groups\/{$data['groupKey']}",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "addGroup",
+      "description": "Creates a group.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "email",
+          "type": "String",
+          "info": "The group's email address. If your account has multiple domains, select the appropriate domain for the email address. The email must be unique. ",
+          "required": true
+        },
+        {
+          "name": "description",
+          "type": "String",
+          "info": "An extended description to help users determine the purpose of a group. ",
+          "required": false
+        },
+        {
+          "name": "name",
+          "type": "String",
+          "info": "The group's display name.",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/groups",
+        "method": "post",
+        "requestParameters": [
+          {
+            "type": "json",
+            "parameters": [
+              "email",
+              "description",
+              "name"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "listGroups",
+      "description": "Retrieves a paginated list of groups in a domain.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "customer",
+          "type": "String",
+          "info": "The group's display name.",
+          "required": false
+        },
+        {
+          "name": "domain",
+          "type": "String",
+          "info": "The domain name. Use this field to get fields from only one domain.",
+          "required": false
+        },
+        {
+          "name": "maxResults",
+          "type": "Number",
+          "info": "Maximum number of results to return. Default, and maximum, is 200.",
+          "required": false
+        },
+        {
+          "name": "pageToken",
+          "type": "String",
+          "info": "Token to specify next page in the list",
+          "required": false
+        },
+        {
+          "name": "userKey",
+          "type": "String",
+          "info": "The userKey query parameter returns all groups for which a user or group has a membership.",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/groups",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": [
+              "customer",
+              "domain",
+              "maxResults",
+              "pageToken",
+              "userKey"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "updateGroup",
+      "description": "Creates a group.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "groupKey",
+          "type": "String",
+          "info": "Identifies the group in the API request. The value can be the group's email address, group alias, or the unique group ID.",
+          "required": true
+        },
+        {
+          "name": "email",
+          "type": "String",
+          "info": "The group's email address. If your account has multiple domains, select the appropriate domain for the email address. The email must be unique. ",
+          "required": false
+        },
+        {
+          "name": "description",
+          "type": "String",
+          "info": "An extended description to help users determine the purpose of a group. ",
+          "required": false
+        },
+        {
+          "name": "name",
+          "type": "String",
+          "info": "The group's display name.",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/groups\/{$data['groupKey']}",
+        "method": "patch",
+        "requestParameters": [
+          {
+            "type": "json",
+            "parameters": [
+              "email",
+              "description",
+              "name"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "deleteGroupAlias",
+      "description": "Removes an alias.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "groupKey",
+          "type": "String",
+          "info": "Identifies the group in the API request. The value can be the group's email address, group alias, or the unique group ID.",
+          "required": true
+        },
+        {
+          "name": "alias",
+          "type": "String",
+          "info": "The alias to be removed",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/groups\/{$data['groupKey']}\/aliases\/{$data['alias']}",
+        "method": "delete",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "addGroupAlias",
+      "description": "Adds an alias for the group. ",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "groupKey",
+          "type": "String",
+          "info": "Identifies the group in the API request. The value can be the group's email address, group alias, or the unique group ID.",
+          "required": true
+        },
+        {
+          "name": "alias",
+          "type": "String",
+          "info": "The alias email address",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/groups\/{$data['groupKey']}\/aliases",
+        "method": "post",
+        "requestParameters": [
+          {
+            "type": "json",
+            "parameters": [
+              "alias"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "listAliases",
+      "description": "Lists all aliases for a group.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "groupKey",
+          "type": "String",
+          "info": "Identifies the group in the API request. The value can be the group's email address, group alias, or the unique group ID.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/groups\/{$data['groupKey']}\/aliases",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "deleteMember",
+      "description": "Removes a member from a group. ",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "groupKey",
+          "type": "String",
+          "info": "Identifies the group in the API request. The value can be the group's email address, group alias, or the unique group ID.",
+          "required": true
+        },
+        {
+          "name": "memberKey",
+          "type": "String",
+          "info": "Identifies the group member in the API request. A group member can be a user or another group. The value can be the member's (group or user) primary email address, alias, or unique ID.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/groups\/{$data['groupKey']}\/members\/{$data['memberKey']}",
+        "method": "delete",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "getSingleMember",
+      "description": "Retrieves a group member's properties.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "groupKey",
+          "type": "String",
+          "info": "Identifies the group in the API request. The value can be the group's email address, group alias, or the unique group ID.",
+          "required": true
+        },
+        {
+          "name": "memberKey",
+          "type": "String",
+          "info": "Identifies the group member in the API request. A group member can be a user or another group. The value can be the member's (group or user) primary email address, alias, or unique ID.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/groups\/{$data['groupKey']}\/members\/{$data['memberKey']}",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "addMember",
+      "description": "Adds a user to the specified group.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "groupKey",
+          "type": "String",
+          "info": "Identifies the group in the API request. The value can be the group's email address, group alias, or the unique group ID.",
+          "required": true
+        },
+        {
+          "name": "role",
+          "type": "Select",
+          "options": [
+            "MANAGER",
+            "MEMBER",
+            "OWNER"
+          ],
+          "info": "The member's role in a group. The API returns an error for cycles in group memberships. For example, if group1 is a member of group2, group2 cannot be a member of group1.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/groups\/{$data['groupKey']}\/members",
+        "method": "post",
+        "requestParameters": [
+          {
+            "type": "json",
+            "parameters": [
+              "role"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "listMembers",
+      "description": "Retrieves a paginated list of all members in a group.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "groupKey",
+          "type": "String",
+          "info": "Identifies the group in the API request. The value can be the group's email address, group alias, or the unique group ID.",
+          "required": true
+        },
+        {
+          "name": "maxResults",
+          "type": "Number",
+          "info": "Maximum number of results to return. Default, and maximum, is 200.",
+          "required": false
+        },
+        {
+          "name": "pageToken",
+          "type": "String",
+          "info": "Token to specify next page in the list",
+          "required": false
+        },
+        {
+          "name": "roles",
+          "type": "Select",
+          "options": [
+            "MANAGER",
+            "MEMBER",
+            "OWNER"
+          ],
+          "info": "The member's role in a group. The API returns an error for cycles in group memberships. For example, if group1 is a member of group2, group2 cannot be a member of group1.",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/groups\/{$data['groupKey']}\/members",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": [
+              "maxResults",
+              "pageToken",
+              "roles"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "updateMember",
+      "description": "Retrieves a group member's properties.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "groupKey",
+          "type": "String",
+          "info": "Identifies the group in the API request. The value can be the group's email address, group alias, or the unique group ID.",
+          "required": true
+        },
+        {
+          "name": "memberKey",
+          "type": "String",
+          "info": "Identifies the group member in the API request. A group member can be a user or another group. The value can be the member's (group or user) primary email address, alias, or unique ID.",
+          "required": true
+        },
+        {
+          "name": "role",
+          "type": "Select",
+          "options": [
+            "MANAGER",
+            "MEMBER",
+            "OWNER"
+          ],
+          "info": "The member's role in a group. The API returns an error for cycles in group memberships. For example, if group1 is a member of group2, group2 cannot be a member of group1.",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/groups\/{$data['groupKey']}\/members\/{$data['memberKey']}",
+        "method": "patch",
+        "requestParameters": [
+          {
+            "type": "json",
+            "parameters": [
+              "role"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "makeActionOnMobileDevice",
+      "description": "Takes an action that affects a mobile device. ",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "customerId",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account.",
+          "required": true
+        },
+        {
+          "name": "deviceId",
+          "type": "String",
+          "info": "An opaque ID that identifies the resource being watched on this channel. Stable across different API versions.",
+          "required": true
+        },
+        {
+          "name": "action",
+          "type": "Select",
+          "options": [
+            "admin_account_wipe",
+            "admin_remote_wipe",
+            "approve",
+            "block",
+            "cancel_remote_wipe_then_activate",
+            "cancel_remote_wipe_then_block"
+          ],
+          "info": "The action to be performed on the device. ",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['customerId']}\/devices\/mobile\/{$data['deviceId']}\/action",
+        "method": "post",
+        "requestParameters": [
+          {
+            "type": "json",
+            "parameters": [
+              "action"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "deleteMobileDevice",
+      "description": "Removes a mobile device.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "customerId",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account.",
+          "required": true
+        },
+        {
+          "name": "deviceId",
+          "type": "String",
+          "info": "An opaque ID that identifies the resource being watched on this channel. Stable across different API versions.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['customerId']}\/devices\/mobile\/{$data['deviceId']}",
+        "method": "delete",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "getSingleMobileDevice",
+      "description": "Retrieves a mobile device's properties.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "customerId",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account.",
+          "required": true
+        },
+        {
+          "name": "deviceId",
+          "type": "String",
+          "info": "An opaque ID that identifies the resource being watched on this channel. Stable across different API versions.",
+          "required": true
+        },
+        {
+          "name": "projection",
+          "type": "Select",
+          "options": [
+            "BASIC",
+            "FULL"
+          ],
+          "info": "Determines whether the response contains the full list of properties or only a subset. ",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['customerId']}\/devices\/mobile\/{$data['deviceId']}",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": [
+              "projection"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "listMobileDevices",
+      "description": "Retrieves a paginated list of all mobile devices for an account.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "customerId",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account.",
+          "required": true
+        },
+        {
+          "name": "orderBy",
+          "type": "Select",
+          "options": [
+            "deviceId",
+            "email",
+            "lastSync",
+            "model",
+            "name",
+            "os",
+            "status",
+            "type"
+          ],
+          "info": "Device property to use for sorting results. ",
+          "required": false
+        },
+        {
+          "name": "maxResults",
+          "type": "Number",
+          "info": "Maximum number of results to return. Default, and maximum, is 100.",
+          "required": false
+        },
+        {
+          "name": "pageToken",
+          "type": "String",
+          "info": "The pageToken query parameter is used to request the next page of query results. ",
+          "required": false
+        },
+        {
+          "name": "projection",
+          "type": "Select",
+          "options": [
+            "BASIC",
+            "FULL"
+          ],
+          "info": "Determines whether the response contains the full list of properties or only a subset. ",
+          "required": false
+        },
+        {
+          "name": "query",
+          "type": "String",
+          "info": "Search string in the format given at View device information and organizational units (https:\/\/support.google.com\/chrome\/a\/answer\/1698333?hl=en)",
+          "required": false
+        },
+        {
+          "name": "sortOrder",
+          "type": "Select",
+          "options": [
+            "ASCENDING",
+            "DESCENDING"
+          ],
+          "info": "Whether to return results in ascending or descending order. Must be used with the orderBy parameter. ",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['customerId']}\/devices\/mobile",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": [
+              "orderBy",
+              "maxResults",
+              "pageToken",
+              "projection",
+              "query",
+              "sortOrder"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "deleteNotification",
+      "description": "Deletes a notification",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account. The customerId is also returned as part of the Users resource.",
+          "required": true
+        },
+        {
+          "name": "notificationId",
+          "type": "String",
+          "info": "The unique ID of the notification.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/notifications\/{$data['notificationId']}",
+        "method": "delete",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "getSingleNotification",
+      "description": "Retrieves a notification.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account. The customerId is also returned as part of the Users resource.",
+          "required": true
+        },
+        {
+          "name": "notificationId",
+          "type": "String",
+          "info": "The unique ID of the notification.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/notifications\/{$data['notificationId']}",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "listNotifications",
+      "description": "Retrieves a list of notifications. ",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "customerId",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account.",
+          "required": true
+        },
+        {
+          "name": "maxResults",
+          "type": "Number",
+          "info": "Maximum number of results to return. Default, and maximum, is 100.",
+          "required": false
+        },
+        {
+          "name": "pageToken",
+          "type": "String",
+          "info": "The pageToken query parameter is used to request the next page of query results. ",
+          "required": false
+        },
+        {
+          "name": "language",
+          "type": "String",
+          "info": "The ISO 639-1 code of the language notifications are returned in. The default is English (en).",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['customerId']}\/notifications",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": [
+              "maxResults",
+              "pageToken",
+              "language"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "updateNotification",
+      "description": "Updates a notification. ",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account. The customerId is also returned as part of the Users resource.",
+          "required": true
+        },
+        {
+          "name": "notificationId",
+          "type": "String",
+          "info": "The unique ID of the notification.",
+          "required": true
+        },
+        {
+          "name": "isUnread",
+          "type": "Select",
+          "options": [
+            "true",
+            "false"
+          ],
+          "info": "Boolean indicating whether the notification is unread or not.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/notifications\/{$data['notificationId']}",
+        "method": "patch",
+        "requestParameters": [
+          {
+            "type": "json",
+            "parameters": [
+              "isUnread"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "deleteOrgunit",
+      "description": "Removes an organization unit.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account. The customerId is also returned as part of the Users resource.",
+          "required": true
+        },
+        {
+          "name": "orgUnitPath",
+          "type": "String",
+          "info": "The full path of the organization unit or its unique ID.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/orgunits\/{$data['orgUnitPath']}",
+        "method": "delete",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "getSingleOrgunit",
+      "description": "Retrieves an organization unit.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account. The customerId is also returned as part of the Users resource.",
+          "required": true
+        },
+        {
+          "name": "orgUnitPath",
+          "type": "String",
+          "info": "The full path of the organization unit or its unique ID.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/orgunits\/{$data['orgUnitPath']}",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "addOrgunitByParentId",
+      "description": "Adds an organization unit using parentOrgUnitId.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account. The customerId is also returned as part of the Users resource.",
+          "required": true
+        },
+        {
+          "name": "name",
+          "type": "String",
+          "info": "The organization unit's path name. For example, an organization unit's name within the \/corp\/support\/sales_support parent path is sales_support. ",
+          "required": true
+        },
+        {
+          "name": "blockInheritance",
+          "type": "Select",
+          "options": [
+            "true",
+            "false"
+          ],
+          "info": "Determines if a sub-organization unit can inherit the settings of the parent organization. The default value is false, meaning a sub-organization unit inherits the settings of the nearest parent organization unit.",
+          "required": false
+        },
+        {
+          "name": "description",
+          "type": "String",
+          "info": "Description of the organization unit.",
+          "required": false
+        },
+        {
+          "name": "orgUnitPath",
+          "type": "String",
+          "info": "The full path to the organization unit. The orgUnitPath is a derived property.",
+          "required": false
+        },
+        {
+          "name": "parentOrgUnitId",
+          "type": "String",
+          "info": "The unique ID of the parent organization unit.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/orgunits",
+        "method": "post",
+        "requestParameters": [
+          {
+            "type": "json",
+            "parameters": [
+              "name",
+              "blockInheritance",
+              "description",
+              "orgUnitPath",
+              "parentOrgUnitId"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "addOrgunitByParentPath",
+      "description": "Adds an organization unit using parentOrgUnitPath.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account. The customerId is also returned as part of the Users resource.",
+          "required": true
+        },
+        {
+          "name": "name",
+          "type": "String",
+          "info": "The organization unit's path name. For example, an organization unit's name within the \/corp\/support\/sales_support parent path is sales_support. ",
+          "required": true
+        },
+        {
+          "name": "blockInheritance",
+          "type": "Select",
+          "options": [
+            "true",
+            "false"
+          ],
+          "info": "Determines if a sub-organization unit can inherit the settings of the parent organization. The default value is false, meaning a sub-organization unit inherits the settings of the nearest parent organization unit.",
+          "required": false
+        },
+        {
+          "name": "description",
+          "type": "String",
+          "info": "Description of the organization unit.",
+          "required": false
+        },
+        {
+          "name": "orgUnitPath",
+          "type": "String",
+          "info": "The full path to the organization unit. The orgUnitPath is a derived property.",
+          "required": false
+        },
+        {
+          "name": "parentOrgUnitPath",
+          "type": "String",
+          "info": "The organization unit's parent path. For example, \/corp\/sales is the parent path for \/corp\/sales\/sales_support organization unit.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/orgunits",
+        "method": "post",
+        "requestParameters": [
+          {
+            "type": "json",
+            "parameters": [
+              "name",
+              "blockInheritance",
+              "description",
+              "orgUnitPath",
+              "parentOrgUnitPath"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "listOrgunits",
+      "description": "Retrieves a list of all organization units for an account.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account. The customerId is also returned as part of the Users resource.",
+          "required": true
+        },
+        {
+          "name": "type",
+          "type": "Select",
+          "options": [
+            "all",
+            "children"
+          ],
+          "info": "Whether to return all sub-organizations or just immediate children.",
+          "required": false
+        },
+        {
+          "name": "orgUnitPath",
+          "type": "String",
+          "info": "The full path to the organization unit. The orgUnitPath is a derived property.",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/orgunits",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": [
+              "orgUnitPath",
+              "type"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "updateOrgUnit",
+      "description": "Updates an organization unit.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account. The customerId is also returned as part of the Users resource.",
+          "required": true
+        },
+        {
+          "name": "orgUnitPath",
+          "type": "String",
+          "info": "The full path of the organization unit or its unique ID.",
+          "required": true
+        },
+        {
+          "name": "name",
+          "type": "String",
+          "info": "The organization unit's path name. For example, an organization unit's name within the \/corp\/support\/sales_support parent path is sales_support. ",
+          "required": false
+        },
+        {
+          "name": "blockInheritance",
+          "type": "Select",
+          "options": [
+            "true",
+            "false"
+          ],
+          "info": "Determines if a sub-organization unit can inherit the settings of the parent organization. The default value is false, meaning a sub-organization unit inherits the settings of the nearest parent organization unit.",
+          "required": false
+        },
+        {
+          "name": "description",
+          "type": "String",
+          "info": "Description of the organization unit.",
+          "required": false
+        },
+        {
+          "name": "orgUnitPath",
+          "type": "String",
+          "info": "The full path to the organization unit. The orgUnitPath is a derived property.",
+          "required": false
+        },
+        {
+          "name": "parentOrgUnitId",
+          "type": "String",
+          "info": "The unique ID of the parent organization unit.",
+          "required": false
+        },
+        {
+          "name": "parentOrgUnitPath",
+          "type": "String",
+          "info": "The organization unit's parent path. For example, \/corp\/sales is the parent path for \/corp\/sales\/sales_support organization unit.",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/orgunits\/{$data['orgUnitPath']}",
+        "method": "patch",
+        "requestParameters": [
+          {
+            "type": "json",
+            "parameters": [
+              "name",
+              "blockInheritance",
+              "description",
+              "orgUnitPath",
+              "parentOrgUnitId",
+              "parentOrgUnitPath"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "listPrivileges",
+      "description": "Retrieves a paginated list of all privileges for a customer. ",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account. The customerId is also returned as part of the Users resource.",
+          "required": true
+        },
+        {
+          "name": "maxResults",
+          "type": "Number",
+          "info": "Maximum number of results to return. Default, and maximum, is 200.",
+          "required": false
+        },
+        {
+          "name": "pageToken",
+          "type": "String",
+          "info": "Token to specify next page in the list",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/roles\/ALL\/privileges",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": [
+              "maxResults",
+              "pageToken"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "deleteCalendarResource",
+      "description": "Deletes a calendar resource.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account. The customerId is also returned as part of the Users resource.",
+          "required": true
+        },
+        {
+          "name": "calendarResourceId",
+          "type": "String",
+          "info": "The unique ID of the calendar resource to delete.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/resources\/calendars\/{$data['calendarResourceId']}",
+        "method": "delete",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "getSingleCalendarResource",
+      "description": "Retrieves a calendar resource.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account. The customerId is also returned as part of the Users resource.",
+          "required": true
+        },
+        {
+          "name": "calendarResourceId",
+          "type": "String",
+          "info": "The unique ID of the calendar resource to delete.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/resources\/calendars\/{$data['calendarResourceId']}",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "addCalendarResource",
+      "description": "Inserts a calendar resource.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account. The customerId is also returned as part of the Users resource.",
+          "required": true
+        },
+        {
+          "name": "resourceName",
+          "type": "String",
+          "info": "The name of the calendar resource. For example, Training Room 1A",
+          "required": true
+        },
+        {
+          "name": "resourceDescription",
+          "type": "String",
+          "info": "The brief description of the calendar resource.",
+          "required": false
+        },
+        {
+          "name": "resourceType",
+          "type": "String",
+          "info": "The type of the calendar resource. Used for grouping resources in the calendar user interface.",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/resources\/calendars",
+        "method": "post",
+        "requestParameters": [
+          {
+            "type": "json",
+            "parameters": [
+              "resourceName",
+              "resourceDescription",
+              "resourceType"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "listCalendarResources",
+      "description": "Retrieves a list of calendar resources for an account.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account. The customerId is also returned as part of the Users resource.",
+          "required": true
+        },
+        {
+          "name": "maxResults",
+          "type": "Number",
+          "info": "Maximum number of results to return. Default, and maximum, is 200.",
+          "required": false
+        },
+        {
+          "name": "pageToken",
+          "type": "String",
+          "info": "Token to specify next page in the list",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/resources\/calendars",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": [
+              "maxResults",
+              "pageToken"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "updateCalendarResource",
+      "description": "Updates a calendar resource. ",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account. The customerId is also returned as part of the Users resource.",
+          "required": true
+        },
+        {
+          "name": "calendarResourceId",
+          "type": "String",
+          "info": "The unique ID of the calendar resource to delete.",
+          "required": true
+        },
+        {
+          "name": "resourceName",
+          "type": "String",
+          "info": "The name of the calendar resource. For example, Training Room 1A",
+          "required": false
+        },
+        {
+          "name": "resourceDescription",
+          "type": "String",
+          "info": "The brief description of the calendar resource.",
+          "required": false
+        },
+        {
+          "name": "resourceType",
+          "type": "String",
+          "info": "The type of the calendar resource. Used for grouping resources in the calendar user interface.",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/resources\/calendars\/{$data['calendarResourceId']}",
+        "method": "patch",
+        "requestParameters": [
+          {
+            "type": "json",
+            "parameters": [
+              "resourceName",
+              "resourceDescription",
+              "resourceType"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "deleteRoleAssignment",
+      "description": "Deletes a calendar resource.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account. The customerId is also returned as part of the Users resource.",
+          "required": true
+        },
+        {
+          "name": "roleAssignmentId",
+          "type": "String",
+          "info": "Immutable ID of the role assignment.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/roleassignments\/{$data['roleAssignmentId']}",
+        "method": "delete",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "getRoleAssignment",
+      "description": "Retrieve a role assignment.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account. The customerId is also returned as part of the Users resource.",
+          "required": true
+        },
+        {
+          "name": "roleAssignmentId",
+          "type": "String",
+          "info": "Immutable ID of the role assignment.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/roleassignments\/{$data['roleAssignmentId']}",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "addRoleAssignment",
+      "description": "Creates a role assignment. ",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account. The customerId is also returned as part of the Users resource.",
+          "required": true
+        },
+        {
+          "name": "assignedTo",
+          "type": "String",
+          "info": "The unique ID of the user this role is assigned to.",
+          "required": true
+        },
+        {
+          "name": "etag",
+          "type": "String",
+          "info": "ETag of the resource.",
+          "required": false
+        },
+        {
+          "name": "orgUnitId",
+          "type": "String",
+          "info": "If the role is restricted to an organizational unit, this contains the ID for the organizational unit the exercise of this role is restricted to.",
+          "required": false
+        },
+        {
+          "name": "roleAssignmentId",
+          "type": "String",
+          "info": "ID of this roleAssignment.",
+          "required": false
+        },
+        {
+          "name": "roleId",
+          "type": "String",
+          "info": "The ID of the role that is assigned.",
+          "required": false
+        },
+        {
+          "name": "scopeType",
+          "type": "Select",
+          "options": [
+            "CUSTOMER",
+            "ORG_UNIT"
+          ],
+          "info": "The scope in which this role is assigned. ",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/roleassignments",
+        "method": "post",
+        "requestParameters": [
+          {
+            "type": "json",
+            "parameters": [
+              "scopeType",
+              "roleId",
+              "roleAssignmentId",
+              "orgUnitId",
+              "etag",
+              "assignedTo"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "listRoleAssignments",
+      "description": "Retrieves a paginated list of all roleAssignments. ",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account. The customerId is also returned as part of the Users resource.",
+          "required": true
+        },
+        {
+          "name": "maxResults",
+          "type": "Number",
+          "info": "Maximum number of results to return. Default, and maximum, is 200.",
+          "required": false
+        },
+        {
+          "name": "pageToken",
+          "type": "String",
+          "info": "Token to specify next page in the list",
+          "required": false
+        },
+        {
+          "name": "userKey",
+          "type": "String",
+          "info": "The user's primary email address, alias email address, or unique user ID. If included in the request, returns role assignments only for this user.",
+          "required": false
+        },
+        {
+          "name": "roleId",
+          "type": "String",
+          "info": "Immutable ID of a role. If included in the request, returns only role assignments containing this role ID.",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/roleassignments",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": [
+              "maxResults",
+              "pageToken",
+              "userKey",
+              "roleId"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "deleteRole",
+      "description": "Deletes a role.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "Immutable ID of the G Suite account.",
+          "required": true
+        },
+        {
+          "name": "roleId",
+          "type": "String",
+          "info": "Immutable ID of the role.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/roles\/{$data['roleId']}",
+        "method": "delete",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "getSingleRole",
+      "description": "Retrieves a role.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "Immutable ID of the G Suite account.",
+          "required": true
+        },
+        {
+          "name": "roleId",
+          "type": "String",
+          "info": "Immutable ID of the role.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/roles\/{$data['roleId']}",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "addRole",
+      "description": "Creates a role.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "Immutable ID of the G Suite account.",
+          "required": true
+        },
+        {
+          "name": "roleName",
+          "type": "String",
+          "info": "Immutable ID of the role.",
+          "required": true
+        },
+        {
+          "name": "rolePrivileges",
+          "type": "List",
+          "structure": {
+            "name": "rolePrivilege",
+            "type": "JSON",
+            "info": "Role privilege object. E.g {\"privilegeName\": string,\"serviceId\": string}"
+          },
+          "info": "The set of privileges that are granted to this role.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/roles",
+        "method": "post",
+        "requestParameters": [
+          {
+            "type": "json",
+            "parameters": [
+              "roleName",
+              "rolePrivileges"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "listRoles",
+      "description": "Retrieves a paginated list of all the roles in a domain.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "Immutable ID of the G Suite account.",
+          "required": true
+        },
+        {
+          "name": "maxResults",
+          "type": "Number",
+          "info": "Maximum number of results to return. Default, and maximum, is 200.",
+          "required": false
+        },
+        {
+          "name": "pageToken",
+          "type": "String",
+          "info": "Token to specify next page in the list",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/roles",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": [
+              "maxResults",
+              "pageToken"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "updateRole",
+      "description": "Updates a role.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "Immutable ID of the G Suite account.",
+          "required": true
+        },
+        {
+          "name": "roleId",
+          "type": "String",
+          "info": "Immutable ID of the role.",
+          "required": true
+        },
+        {
+          "name": "roleName",
+          "type": "String",
+          "info": "Immutable ID of the role.",
+          "required": false
+        },
+        {
+          "name": "roleDescription",
+          "type": "String",
+          "info": "A short description of the role.",
+          "required": false
+        },
+        {
+          "name": "rolePrivileges",
+          "type": "List",
+          "structure": {
+            "name": "rolePrivilege",
+            "type": "JSON",
+            "info": "Role privilege object. E.g {\"privilegeName\": string,\"serviceId\": string}"
+          },
+          "info": "The set of privileges that are granted to this role.",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/roles\/{$data['roleId']}",
+        "method": "patch",
+        "requestParameters": [
+          {
+            "type": "json",
+            "parameters": [
+              "roleName",
+              "roleDescription",
+              "rolePrivileges"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "deleteSchema",
+      "description": "Delete schema ",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "Immutable ID of the G Suite account.",
+          "required": true
+        },
+        {
+          "name": "schemaId",
+          "type": "String",
+          "info": "Name or immutable ID of the schema.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/schemas\/{$data['schemaId']}",
+        "method": "delete",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "getSingleSchema",
+      "description": "Retrieve schema ",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "Immutable ID of the G Suite account.",
+          "required": true
+        },
+        {
+          "name": "schemaId",
+          "type": "String",
+          "info": "Name or immutable ID of the schema.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/schemas\/{$data['schemaId']}",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "addSchema",
+      "description": "Create schema.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "Immutable ID of the G Suite account.",
+          "required": true
+        },
+        {
+          "name": "schemaName",
+          "type": "String",
+          "info": "Name of the schema.",
+          "required": true
+        },
+        {
+          "name": "fields",
+          "type": "List",
+          "structure": {
+            "name": "field",
+            "type": "JSON",
+            "infor": "JSON object of field."
+          },
+          "info": "A list of fields in the schema.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/schemas",
+        "method": "post",
+        "requestParameters": [
+          {
+            "type": "json",
+            "parameters": [
+              "schemaName",
+              "fields"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "listSchemas",
+      "description": "Retrieve all schemas for a customer",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "Immutable ID of the G Suite account.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/schemas",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "updateSchema",
+      "description": "Update schema.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "accountId",
+          "type": "String",
+          "info": "Immutable ID of the G Suite account.",
+          "required": true
+        },
+        {
+          "name": "schemaId",
+          "type": "String",
+          "info": "Name or immutable ID of the schema.",
+          "required": true
+        },
+        {
+          "name": "schemaName",
+          "type": "String",
+          "info": "Name of the schema.",
+          "required": false
+        },
+        {
+          "name": "fields",
+          "type": "List",
+          "structure": {
+            "name": "field",
+            "type": "JSON",
+            "infor": "JSON object of field."
+          },
+          "info": "A list of fields in the schema.",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/customer\/{$data['accountId']}\/schemas\/{$data['schemaId']}",
+        "method": "patch",
+        "requestParameters": [
+          {
+            "type": "json",
+            "parameters": [
+              "fields",
+              "schemaName"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "deleteToken",
+      "description": "Delete all access tokens issued by a user for an application. ",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "userKey",
+          "type": "String",
+          "info": "Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.",
+          "required": true
+        },
+        {
+          "name": "clientId",
+          "type": "String",
+          "info": "The Client ID of the application the token is issued to.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/users\/{$data['userKey']}\/tokens\/{$data['clientId']}",
+        "method": "delete",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "getSingleToken",
+      "description": "Get information about an access token issued by a user.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "userKey",
+          "type": "String",
+          "info": "Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.",
+          "required": true
+        },
+        {
+          "name": "clientId",
+          "type": "String",
+          "info": "The Client ID of the application the token is issued to.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/users\/{$data['userKey']}\/tokens\/{$data['clientId']}",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "listTokens",
+      "description": "Returns the set of tokens specified user has issued to 3rd party applications.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "userKey",
+          "type": "String",
+          "info": "Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/users\/{$data['userKey']}\/tokens",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "deleteUser",
+      "description": "Deletes a user.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "userKey",
+          "type": "String",
+          "info": "Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/users\/{$data['userKey']}",
+        "method": "delete",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "getSingleUser",
+      "description": "Retrieves a user.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "userKey",
+          "type": "String",
+          "info": "Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.",
+          "required": true
+        },
+        {
+          "name": "customFieldMask",
+          "type": "List",
+          "structure": {
+            "name": "fieldMask",
+            "type": "String",
+            "info": "Single customFieldMask"
+          },
+          "info": "List of schema names. All fields from these schemas are fetched. This should only be set when projection=custom.",
+          "required": false,
+          "vendorSchema": {
+            "format": "toString:{,}"
+          }
+        },
+        {
+          "name": "projection",
+          "type": "Select",
+          "options": [
+            "BASIC",
+            "FULL",
+            "custom"
+          ],
+          "info": "Determines whether the response contains the full list of properties or only a subset. ",
+          "required": false
+        },
+        {
+          "name": "viewType",
+          "type": "Select",
+          "options": [
+            "admin_view",
+            "domain_public"
+          ],
+          "info": "Whether to fetch the administrator-only or domain-wide public view of the user. ",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/users\/{$data['userKey']}",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": [
+              "customFieldMask",
+              "projection",
+              "viewType"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "addUser",
+      "description": "Creates a user.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "familyName",
+          "type": "String",
+          "info": "The user's last name. Required when creating a user account.",
+          "required": true
+        },
+        {
+          "name": "givenName",
+          "type": "String",
+          "info": "The user's given name. Required when creating a user account.",
+          "required": true
+        },
+        {
+          "name": "password",
+          "type": "String",
+          "info": "Stores the password for the user account. ",
+          "required": true
+        },
+        {
+          "name": "primaryEmail",
+          "type": "String",
+          "info": "The user's primary email address. ",
+          "required": true
+        },
+        {
+          "name": "addresses",
+          "type": "List",
+          "structure": {
+            "name": "address",
+            "type": "JSON",
+            "info": "Single address object"
+          },
+          "info": "The user's addresses",
+          "required": false
+        },
+        {
+          "name": "changePasswordAtNextLogin",
+          "type": "Select",
+          "options": [
+            "true",
+            "false"
+          ],
+          "info": "Indicates if the user is forced to change their password at next login.",
+          "required": false
+        },
+        {
+          "name": "emails",
+          "type": "List",
+          "structure": {
+            "name": "email",
+            "type": "JSON",
+            "info": "Single email object"
+          },
+          "info": "The user's email addresses",
+          "required": false
+        },
+        {
+          "name": "externalIds",
+          "type": "List",
+          "structure": {
+            "name": "externalId",
+            "type": "JSON",
+            "info": "Single externalId"
+          },
+          "info": "The user's externalIds",
+          "required": false
+        },
+        {
+          "name": "hashFunction",
+          "type": "Select",
+          "options": [
+            "SHA-1",
+            "MD5",
+            "CRYPT "
+          ],
+          "info": "Stores the hash format of the password property. We recommend sending the password property value as a base 16 bit hexadecimal-encoded hash value. Set the hashFunction values as either the SHA-1, MD5, or CRYPT hash format.",
+          "required": false
+        },
+        {
+          "name": "ims",
+          "type": "List",
+          "structure": {
+            "name": "im",
+            "type": "JSON",
+            "info": "Single im"
+          },
+          "info": "The user's ims",
+          "required": false
+        },
+        {
+          "name": "includeInGlobalAddressList",
+          "type": "Select",
+          "options": [
+            "true",
+            "false"
+          ],
+          "info": "Indicates if the user's profile is visible in the G Suite global address list when the contact sharing feature is enabled for the domain. ",
+          "required": false
+        },
+        {
+          "name": "ipWhitelisted",
+          "type": "Select",
+          "options": [
+            "true",
+            "false"
+          ],
+          "info": "If true, the user's IP address is white listed.",
+          "required": false
+        },
+        {
+          "name": "locations",
+          "type": "List",
+          "structure": {
+            "name": "location",
+            "type": "JSON",
+            "info": "Single location"
+          },
+          "info": "The user's locations",
+          "required": false
+        },
+        {
+          "name": "notesContentType",
+          "type": "Select",
+          "options": [
+            "text_plain",
+            "text_html"
+          ],
+          "info": "Content type of note, either plain text or HTML. Default is plain text. ",
+          "required": false
+        },
+        {
+          "name": "notesValue",
+          "type": "String",
+          "info": "Contents of notes.",
+          "required": false
+        },
+        {
+          "name": "orgUnitPath",
+          "type": "String",
+          "info": "The full path of the parent organization associated with the user. If the parent organization is the top-level, it is represented as a forward slash (\/).",
+          "required": false
+        },
+        {
+          "name": "organizations",
+          "type": "List",
+          "structure": {
+            "name": "organization",
+            "type": "JSON",
+            "info": "Single organization"
+          },
+          "info": "List of organizations the user belongs to.",
+          "required": false
+        },
+        {
+          "name": "phones",
+          "type": "List",
+          "structure": {
+            "name": "phone",
+            "type": "JSON",
+            "info": "Single phone"
+          },
+          "info": "List of phones the user has",
+          "required": false
+        },
+        {
+          "name": "posixAccounts",
+          "type": "List",
+          "structure": {
+            "name": "posixAccount",
+            "type": "JSON",
+            "info": "Single posixAccount"
+          },
+          "info": "List of posixAccounts the user has",
+          "required": false
+        },
+        {
+          "name": "relations",
+          "type": "List",
+          "structure": {
+            "name": "relation",
+            "type": "JSON",
+            "info": "Single relation"
+          },
+          "info": "A list of the user's relationships to other users.",
+          "required": false
+        },
+        {
+          "name": "sshPublicKeys",
+          "type": "List",
+          "structure": {
+            "name": "sshPublicKey",
+            "type": "JSON",
+            "info": "Single sshPublicKey"
+          },
+          "info": "A list of SSH public keys.",
+          "required": false
+        },
+        {
+          "name": "suspended",
+          "type": "Select",
+          "options": [
+            "true",
+            "false"
+          ],
+          "info": "Indicates if the user is suspended.",
+          "required": false
+        },
+        {
+          "name": "websites",
+          "type": "List",
+          "structure": {
+            "name": "website",
+            "type": "JSON",
+            "info": "Single website"
+          },
+          "info": "Websites of the user.",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/users",
+        "method": "post",
+        "vendorFieldsStructure": [
+          {
+            "name": {
+              "familyName": "{familyName}",
+              "givenName": "{givenName}"
+            },
+            "notes": {
+              "ContentType": "{notesContentType}",
+              "value": "{notesValue}"
+            }
+          }
+        ],
+        "requestParameters": [
+          {
+            "type": "json",
+            "parameters": [
+              "websites",
+              "suspended",
+              "name",
+              "password",
+              "primaryEmail",
+              "addresses",
+              "changePasswordAtNextLogin",
+              "emails",
+              "externalIds",
+              "hashFunction",
+              "ims",
+              "includeInGlobalAddressList",
+              "ipWhitelisted",
+              "locations",
+              "notes",
+              "orgUnitPath",
+              "organizations",
+              "phones",
+              "posixAccounts",
+              "relations",
+              "sshPublicKeys"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "listUsersByDomain",
+      "description": "Retrieves a paginated list of either deleted users or all users in a domain. ",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "customFieldMask",
+          "type": "List",
+          "structure": {
+            "name": "fieldMask",
+            "type": "String",
+            "info": "Single customFieldMask"
+          },
+          "info": "List of schema names. All fields from these schemas are fetched. This should only be set when projection=custom.",
+          "required": false,
+          "vendorSchema": {
+            "format": "toString:{,}"
+          }
+        },
+        {
+          "name": "domain",
+          "type": "String",
+          "info": "The domain name. Use this field to get fields from only one domain. ",
+          "required": true
+        },
+        {
+          "name": "projection",
+          "type": "Select",
+          "options": [
+            "BASIC",
+            "FULL",
+            "custom"
+          ],
+          "info": "Determines whether the response contains the full list of properties or only a subset. ",
+          "required": false
+        },
+        {
+          "name": "viewType",
+          "type": "Select",
+          "options": [
+            "admin_view",
+            "domain_public"
+          ],
+          "info": "Whether to fetch the administrator-only or domain-wide public view of the user. ",
+          "required": false
+        },
+        {
+          "name": "maxResults",
+          "type": "Number",
+          "info": "Maximum number of results to return. Default, and maximum, is 200.",
+          "required": false
+        },
+        {
+          "name": "pageToken",
+          "type": "String",
+          "info": "Token to specify next page in the list",
+          "required": false
+        },
+        {
+          "name": "orderBy",
+          "type": "Select",
+          "options": [
+            "email",
+            "familyName",
+            "givenName"
+          ],
+          "info": "Property to use for sorting results.",
+          "required": false
+        },
+        {
+          "name": "query",
+          "type": "String",
+          "info": "Query string for searching user fields.",
+          "required": false
+        },
+        {
+          "name": "sortOrder",
+          "type": "Select",
+          "options": [
+            "ASCENDING",
+            "DESCENDING"
+          ],
+          "info": "Whether to return results in ascending or descending order. Must be used with the orderBy parameter. ",
+          "required": false
+        },
+        {
+          "name": "showDeleted",
+          "type": "Select",
+          "options": [
+            "true",
+            "false"
+          ],
+          "info": "If set to true retrieves the list of deleted users. Default is false",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/users",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": [
+              "showDeleted",
+              "sortOrder",
+              "query",
+              "orderBy",
+              "pageToken",
+              "maxResults",
+              "domain",
+              "customFieldMask",
+              "projection",
+              "viewType"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "listUsersByCustomer",
+      "description": "Retrieves a paginated list of either deleted users or all users by customer",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "customFieldMask",
+          "type": "List",
+          "structure": {
+            "name": "fieldMask",
+            "type": "String",
+            "info": "Single customFieldMask"
+          },
+          "info": "List of schema names. All fields from these schemas are fetched. This should only be set when projection=custom.",
+          "required": false,
+          "vendorSchema": {
+            "format": "toString:{,}"
+          }
+        },
+        {
+          "name": "customer",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account. In case of a multi-domain account, to fetch all groups for a customer, fill this field instead of domain. ",
+          "required": true
+        },
+        {
+          "name": "projection",
+          "type": "Select",
+          "options": [
+            "BASIC",
+            "FULL",
+            "custom"
+          ],
+          "info": "Determines whether the response contains the full list of properties or only a subset. ",
+          "required": false
+        },
+        {
+          "name": "viewType",
+          "type": "Select",
+          "options": [
+            "admin_view",
+            "domain_public"
+          ],
+          "info": "Whether to fetch the administrator-only or domain-wide public view of the user. ",
+          "required": false
+        },
+        {
+          "name": "maxResults",
+          "type": "Number",
+          "info": "Maximum number of results to return. Default, and maximum, is 200.",
+          "required": false
+        },
+        {
+          "name": "pageToken",
+          "type": "String",
+          "info": "Token to specify next page in the list",
+          "required": false
+        },
+        {
+          "name": "orderBy",
+          "type": "Select",
+          "options": [
+            "email",
+            "familyName",
+            "givenName"
+          ],
+          "info": "Property to use for sorting results.",
+          "required": false
+        },
+        {
+          "name": "query",
+          "type": "String",
+          "info": "Query string for searching user fields.",
+          "required": false
+        },
+        {
+          "name": "sortOrder",
+          "type": "Select",
+          "options": [
+            "ASCENDING",
+            "DESCENDING"
+          ],
+          "info": "Whether to return results in ascending or descending order. Must be used with the orderBy parameter. ",
+          "required": false
+        },
+        {
+          "name": "showDeleted",
+          "type": "Select",
+          "options": [
+            "true",
+            "false"
+          ],
+          "info": "If set to true retrieves the list of deleted users. Default is false",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/users",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": [
+              "showDeleted",
+              "sortOrder",
+              "query",
+              "orderBy",
+              "pageToken",
+              "maxResults",
+              "customer",
+              "customFieldMask",
+              "projection",
+              "viewType"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "makeUserAdmin",
+      "description": "Makes a user a super administrator.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "userKey",
+          "type": "String",
+          "info": "Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/users\/{$data['userKey']}\/makeAdmin",
+        "method": "post",
+        "requestParameters": [
+          {
+            "type": "json",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "updateUser",
+      "description": "Updates a user using patch semantics.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "userKey",
+          "type": "String",
+          "info": "Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.",
+          "required": true
+        },
+        {
+          "name": "familyName",
+          "type": "String",
+          "info": "The user's last name. Required when creating a user account.",
+          "required": false
+        },
+        {
+          "name": "givenName",
+          "type": "String",
+          "info": "The user's given name. Required when creating a user account.",
+          "required": false
+        },
+        {
+          "name": "password",
+          "type": "String",
+          "info": "Stores the password for the user account. ",
+          "required": false
+        },
+        {
+          "name": "primaryEmail",
+          "type": "String",
+          "info": "The user's primary email address. ",
+          "required": false
+        },
+        {
+          "name": "addresses",
+          "type": "List",
+          "structure": {
+            "name": "address",
+            "type": "JSON",
+            "info": "Single address object"
+          },
+          "info": "The user's addresses",
+          "required": false
+        },
+        {
+          "name": "changePasswordAtNextLogin",
+          "type": "Select",
+          "options": [
+            "true",
+            "false"
+          ],
+          "info": "Indicates if the user is forced to change their password at next login.",
+          "required": false
+        },
+        {
+          "name": "emails",
+          "type": "List",
+          "structure": {
+            "name": "email",
+            "type": "JSON",
+            "info": "Single email object"
+          },
+          "info": "The user's email addresses",
+          "required": false
+        },
+        {
+          "name": "externalIds",
+          "type": "List",
+          "structure": {
+            "name": "externalId",
+            "type": "JSON",
+            "info": "Single externalId"
+          },
+          "info": "The user's externalIds",
+          "required": false
+        },
+        {
+          "name": "hashFunction",
+          "type": "Select",
+          "options": [
+            "SHA-1",
+            "MD5",
+            "CRYPT "
+          ],
+          "info": "Stores the hash format of the password property. We recommend sending the password property value as a base 16 bit hexadecimal-encoded hash value. Set the hashFunction values as either the SHA-1, MD5, or CRYPT hash format.",
+          "required": false
+        },
+        {
+          "name": "ims",
+          "type": "List",
+          "structure": {
+            "name": "im",
+            "type": "JSON",
+            "info": "Single im"
+          },
+          "info": "The user's ims",
+          "required": false
+        },
+        {
+          "name": "includeInGlobalAddressList",
+          "type": "Select",
+          "options": [
+            "true",
+            "false"
+          ],
+          "info": "Indicates if the user's profile is visible in the G Suite global address list when the contact sharing feature is enabled for the domain. ",
+          "required": false
+        },
+        {
+          "name": "ipWhitelisted",
+          "type": "Select",
+          "options": [
+            "true",
+            "false"
+          ],
+          "info": "If true, the user's IP address is white listed.",
+          "required": false
+        },
+        {
+          "name": "locations",
+          "type": "List",
+          "structure": {
+            "name": "location",
+            "type": "JSON",
+            "info": "Single location"
+          },
+          "info": "The user's locations",
+          "required": false
+        },
+        {
+          "name": "notesContentType",
+          "type": "Select",
+          "options": [
+            "text_plain",
+            "text_html"
+          ],
+          "info": "Content type of note, either plain text or HTML. Default is plain text. ",
+          "required": false
+        },
+        {
+          "name": "notesValue",
+          "type": "String",
+          "info": "Contents of notes.",
+          "required": false
+        },
+        {
+          "name": "orgUnitPath",
+          "type": "String",
+          "info": "The full path of the parent organization associated with the user. If the parent organization is the top-level, it is represented as a forward slash (\/).",
+          "required": false
+        },
+        {
+          "name": "organizations",
+          "type": "List",
+          "structure": {
+            "name": "organization",
+            "type": "JSON",
+            "info": "Single organization"
+          },
+          "info": "List of organizations the user belongs to.",
+          "required": false
+        },
+        {
+          "name": "phones",
+          "type": "List",
+          "structure": {
+            "name": "phone",
+            "type": "JSON",
+            "info": "Single phone"
+          },
+          "info": "List of phones the user has",
+          "required": false
+        },
+        {
+          "name": "posixAccounts",
+          "type": "List",
+          "structure": {
+            "name": "posixAccount",
+            "type": "JSON",
+            "info": "Single posixAccount"
+          },
+          "info": "List of posixAccounts the user has",
+          "required": false
+        },
+        {
+          "name": "relations",
+          "type": "List",
+          "structure": {
+            "name": "relation",
+            "type": "JSON",
+            "info": "Single relation"
+          },
+          "info": "A list of the user's relationships to other users.",
+          "required": false
+        },
+        {
+          "name": "sshPublicKeys",
+          "type": "List",
+          "structure": {
+            "name": "sshPublicKey",
+            "type": "JSON",
+            "info": "Single sshPublicKey"
+          },
+          "info": "A list of SSH public keys.",
+          "required": false
+        },
+        {
+          "name": "suspended",
+          "type": "Select",
+          "options": [
+            "true",
+            "false"
+          ],
+          "info": "Indicates if the user is suspended.",
+          "required": false
+        },
+        {
+          "name": "websites",
+          "type": "List",
+          "structure": {
+            "name": "website",
+            "type": "JSON",
+            "info": "Single website"
+          },
+          "info": "Websites of the user.",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/users\/{$data['userKey']}",
+        "method": "patch",
+        "vendorFieldsStructure": [
+          {
+            "name": {
+              "familyName": "{familyName}",
+              "givenName": "{givenName}"
+            },
+            "notes": {
+              "ContentType": "{notesContentType}",
+              "value": "{notesValue}"
+            }
+          }
+        ],
+        "requestParameters": [
+          {
+            "type": "json",
+            "parameters": [
+              "websites",
+              "suspended",
+              "name",
+              "password",
+              "primaryEmail",
+              "addresses",
+              "changePasswordAtNextLogin",
+              "emails",
+              "externalIds",
+              "hashFunction",
+              "ims",
+              "includeInGlobalAddressList",
+              "ipWhitelisted",
+              "locations",
+              "notes",
+              "orgUnitPath",
+              "organizations",
+              "phones",
+              "posixAccounts",
+              "relations",
+              "sshPublicKeys"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "undeleteUser",
+      "description": "Undeletes a deleted user. ",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "userKey",
+          "type": "String",
+          "info": "Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/users\/{$data['userKey']}\/undelete",
+        "method": "post",
+        "requestParameters": [
+          {
+            "type": "json",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "watchUsers",
+      "description": "Watch for changes in users list",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "customFieldMask",
+          "type": "List",
+          "structure": {
+            "name": "fieldMask",
+            "type": "String",
+            "info": "Single customFieldMask"
+          },
+          "info": "List of schema names. All fields from these schemas are fetched. This should only be set when projection=custom.",
+          "required": false,
+          "vendorSchema": {
+            "format": "toString:{,}"
+          }
+        },
+        {
+          "name": "customer",
+          "type": "String",
+          "info": "The unique ID for the customer's G Suite account. In case of a multi-domain account, to fetch all groups for a customer, fill this field instead of domain. ",
+          "required": false
+        },
+        {
+          "name": "domain",
+          "type": "String",
+          "info": "The domain name. Use this field to get fields from only one domain. ",
+          "required": false
+        },
+        {
+          "name": "event",
+          "type": "Select",
+          "options": [
+            "add",
+            "delete",
+            "makeAdmin",
+            "undelete",
+            "update"
+          ],
+          "info": "Events to watch for. ",
+          "required": false
+        },
+        {
+          "name": "projection",
+          "type": "Select",
+          "options": [
+            "BASIC",
+            "FULL",
+            "custom"
+          ],
+          "info": "Determines whether the response contains the full list of properties or only a subset. ",
+          "required": false
+        },
+        {
+          "name": "viewType",
+          "type": "Select",
+          "options": [
+            "admin_view",
+            "domain_public"
+          ],
+          "info": "Whether to fetch the administrator-only or domain-wide public view of the user. ",
+          "required": false
+        },
+        {
+          "name": "maxResults",
+          "type": "Number",
+          "info": "Maximum number of results to return. Default, and maximum, is 200.",
+          "required": false
+        },
+        {
+          "name": "pageToken",
+          "type": "String",
+          "info": "Token to specify next page in the list",
+          "required": false
+        },
+        {
+          "name": "orderBy",
+          "type": "Select",
+          "options": [
+            "email",
+            "familyName",
+            "givenName"
+          ],
+          "info": "Property to use for sorting results.",
+          "required": false
+        },
+        {
+          "name": "query",
+          "type": "String",
+          "info": "Query string for searching user fields.",
+          "required": false
+        },
+        {
+          "name": "sortOrder",
+          "type": "Select",
+          "options": [
+            "ASCENDING",
+            "DESCENDING"
+          ],
+          "info": "Whether to return results in ascending or descending order. Must be used with the orderBy parameter. ",
+          "required": false
+        },
+        {
+          "name": "showDeleted",
+          "type": "Select",
+          "options": [
+            "true",
+            "false"
+          ],
+          "info": "If set to true retrieves the list of deleted users. Default is false",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/users",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": [
+              "showDeleted",
+              "sortOrder",
+              "query",
+              "orderBy",
+              "pageToken",
+              "maxResults",
+              "domain",
+              "customer",
+              "customFieldMask",
+              "projection",
+              "viewType",
+              "event"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "deleteUserAlias",
+      "description": "Removes an alias",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "userKey",
+          "type": "String",
+          "info": "Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.",
+          "required": true
+        },
+        {
+          "name": "alias",
+          "type": "String",
+          "info": "The alias to be removed.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/users\/{$data['userKey']}\/aliases\/{$data['alias']}",
+        "method": "delete",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "addUserAlias",
+      "description": "Adds an alias",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "userKey",
+          "type": "String",
+          "info": "Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.",
+          "required": true
+        },
+        {
+          "name": "alias",
+          "type": "String",
+          "info": "The alias email address.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/users\/{$data['userKey']}\/aliases",
+        "method": "post",
+        "requestParameters": [
+          {
+            "type": "json",
+            "parameters": [
+              "alias"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "listUserAliases",
+      "description": "Lists all aliases for a user. ",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "userKey",
+          "type": "String",
+          "info": "Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/users\/{$data['userKey']}\/aliases",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "watchUserAliases",
+      "description": "Watch for changes in user aliases list ",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "userKey",
+          "type": "String",
+          "info": "Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.",
+          "required": true
+        },
+        {
+          "name": "event",
+          "type": "Select",
+          "options": [
+            "add",
+            "delete",
+            "makeAdmin",
+            "undelete",
+            "update"
+          ],
+          "info": "Events to watch for. ",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/users\/{$data['userKey']}\/aliases\/watch",
+        "method": "post",
+        "requestParameters": [
+          {
+            "type": "json",
+            "parameters": [
+              "event"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "deleteUserPhoto",
+      "description": "Removes the user's photo. ",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "userKey",
+          "type": "String",
+          "info": "Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/users\/{$data['userKey']}\/photos\/thumbnail",
+        "method": "delete",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "getUserPhoto",
+      "description": "Retrieves the user's photo. ",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "userKey",
+          "type": "String",
+          "info": "Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/users\/{$data['userKey']}\/photos\/thumbnail",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "addUserPhoto",
+      "description": "Adds a photo for the user.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "userKey",
+          "type": "String",
+          "info": "Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.",
+          "required": true
+        },
+        {
+          "name": "height",
+          "type": "Number",
+          "info": "Height of the photo in pixels.",
+          "required": false
+        },
+        {
+          "name": "width",
+          "type": "Number",
+          "info": "Width of the photo in pixels.",
+          "required": false
+        },
+        {
+          "name": "mimeType",
+          "type": "Select",
+          "options": [
+            "JPEG",
+            "PNG",
+            "GIF",
+            "BMP",
+            "TIFF"
+          ],
+          "info": "The MIME type of the photo. Allowed values are JPEG, PNG, GIF, BMP, TIFF, and web-safe base64 encoding.",
+          "required": false
+        },
+        {
+          "name": "photoData",
+          "type": "String",
+          "info": "Photo file",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/users\/{$data['userKey']}\/photos\/thumbnail",
+        "method": "patch",
+        "requestParameters": [
+          {
+            "type": "json",
+            "parameters": [
+              "photoData",
+              "mimeType",
+              "height",
+              "width"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "getUserVerificationCode",
+      "description": "Generate new backup verification codes for the user.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "userKey",
+          "type": "String",
+          "info": "Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/users\/{$data['userKey']}\/verificationCodes\/generate",
+        "method": "post",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "invalidateUserVerificationCode",
+      "description": "Invalidate the current backup verification codes for the user. ",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "userKey",
+          "type": "String",
+          "info": "Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/users\/{$data['userKey']}\/verificationCodes\/invalidate",
+        "method": "post",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "listUserVerificationCodes",
+      "description": "Returns the current set of valid backup verification codes for the specified user. ",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "userKey",
+          "type": "String",
+          "info": "Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.",
+          "required": true
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/users\/{$data['userKey']}\/verificationCodes",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": []
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    }
+  ]
+}
