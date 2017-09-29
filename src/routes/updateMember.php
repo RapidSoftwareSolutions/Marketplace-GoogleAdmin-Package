@@ -13,9 +13,9 @@ $app->post('/api/GoogleAdmin/updateMember', function ($request, $response) {
     }
 
     $requiredParams = ['accessToken'=>'accessToken','groupKey'=>'groupKey','memberKey'=>'memberKey'];
-    $optionalParams = ['role'=>'role'];
+    $optionalParams = ['role'=>'role', 'type' => 'type', 'email' => 'email'];
     $bodyParams = [
-       'json' => ['role']
+       'json' => ['role', 'type', 'email']
     ];
 
     $data = \Models\Params::createParams($requiredParams, $optionalParams, $post_data['args']);

@@ -18,7 +18,7 @@
       "clientSecret"
     ]
   },
-  "steps":[
+  "steps": [
     "Go to Google Developers Console https://console.developers.google.com/",
     "Select a project, or create a new one.",
     "Press Continue to activate API key.",
@@ -1710,6 +1710,21 @@
           "required": true
         },
         {
+          "name": "memberKey",
+          "type": "String",
+          "info": "Identifies the group in the API request. The value can be the group's email address, group alias, or the unique group ID.",
+          "required": true,
+          "vendorSchema": {
+            "name": "id"
+          }
+        },
+        {
+          "name": "email",
+          "type": "String",
+          "info": "Member email address",
+          "required": false
+        },
+        {
           "name": "role",
           "type": "Select",
           "options": [
@@ -1718,6 +1733,18 @@
             "OWNER"
           ],
           "info": "The member's role in a group. The API returns an error for cycles in group memberships. For example, if group1 is a member of group2, group2 cannot be a member of group1.",
+          "required": true
+        },
+        {
+          "name": "type",
+          "type": "Select",
+          "options": [
+            "CUSTOMER",
+            "EXTERNAL",
+            "GROUP",
+            "USER"
+          ],
+          "info": "The type of group member. ",
           "required": true
         }
       ],
@@ -1728,7 +1755,9 @@
           {
             "type": "json",
             "parameters": [
-              "role"
+              "role",
+              "id",
+              "email"
             ]
           }
         ],
@@ -1847,6 +1876,24 @@
           ],
           "info": "The member's role in a group. The API returns an error for cycles in group memberships. For example, if group1 is a member of group2, group2 cannot be a member of group1.",
           "required": false
+        },
+        {
+          "name": "email",
+          "type": "String",
+          "info": "Member email address",
+          "required": false
+        },
+        {
+          "name": "type",
+          "type": "Select",
+          "options": [
+            "CUSTOMER",
+            "EXTERNAL",
+            "GROUP",
+            "USER"
+          ],
+          "info": "The type of group member. ",
+          "required": true
         }
       ],
       "vendorRequest": {
@@ -1856,7 +1903,9 @@
           {
             "type": "json",
             "parameters": [
-              "role"
+              "role",
+              "email",
+              "type"
             ]
           }
         ],

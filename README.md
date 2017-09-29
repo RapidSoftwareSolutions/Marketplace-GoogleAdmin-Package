@@ -325,6 +325,9 @@ Adds a user to the specified group.
 |------------|-------|----------
 | accessToken| String| OAuth 2.0 token for the current user.
 | groupKey   | String| Identifies the group in the API request. The value can be the group's email address, group alias, or the unique group ID.
+| memberKey   | String| Id of the member
+| email   | String| Email of the member
+| type   | String| The type of group member. 
 | role       | Select| The member's role in a group. The API returns an error for cycles in group memberships. For example, if group1 is a member of group2, group2 cannot be a member of group1.
 
 ## GoogleAdmin.listMembers
@@ -347,6 +350,8 @@ Retrieves a group member's properties.
 | groupKey   | String| Identifies the group in the API request. The value can be the group's email address, group alias, or the unique group ID.
 | memberKey  | String| Identifies the group member in the API request. A group member can be a user or another group. The value can be the member's (group or user) primary email address, alias, or unique ID.
 | role       | Select| The member's role in a group. The API returns an error for cycles in group memberships. For example, if group1 is a member of group2, group2 cannot be a member of group1.
+| email   | String| Email of the member
+| type   | String| The type of group member. 
 
 ## GoogleAdmin.makeActionOnMobileDevice
 Takes an action that affects a mobile device. 
