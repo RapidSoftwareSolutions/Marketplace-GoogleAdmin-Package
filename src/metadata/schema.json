@@ -745,7 +745,7 @@
         {
           "name": "language",
           "type": "String",
-          "info": "The customer's ISO 639-2 language code. See the Language Codes page for the list of supported codes. Valid language codes outside the supported set will be accepted by the API but may lead to unexpected behavior. The default value is en.",
+          "info": "The customer's ISO 639-2 language code. See the Language Codes page for the list of supported codes. Valid language codes outside the supported set will be accepted by the API but may lead to unexpected behavior. The default value is en. https://developers.google.com/admin-sdk/directory/v1/languages",
           "required": false
         },
         {
@@ -924,7 +924,7 @@
           "name": "parentDomainName",
           "type": "String",
           "info": "The parent domain name that the domain alias is associated with. This can either be a primary or secondary domain name within a customer.",
-          "required": false
+          "required": true
         }
       ],
       "vendorRequest": {
@@ -1329,7 +1329,64 @@
       ]
     },
     {
-      "name": "listGroups",
+      "name": "listGroupsByDomain",
+      "description": "Retrieves a paginated list of groups in a domain.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
+        },
+        {
+          "name": "domain",
+          "type": "String",
+          "info": "The domain name. Use this field to get fields from only one domain.",
+          "required": true
+        },
+        {
+          "name": "maxResults",
+          "type": "Number",
+          "info": "Maximum number of results to return. Default, and maximum, is 200.",
+          "required": false
+        },
+        {
+          "name": "pageToken",
+          "type": "String",
+          "info": "Token to specify next page in the list",
+          "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/groups",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": [
+              "domain",
+              "maxResults",
+              "pageToken"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "listGroupsByCustomer",
       "description": "Retrieves a paginated list of groups in a domain.",
       "args": [
         {
@@ -1342,13 +1399,58 @@
           "name": "customer",
           "type": "String",
           "info": "The group's display name.",
+          "required": true
+        },
+        {
+          "name": "maxResults",
+          "type": "Number",
+          "info": "Maximum number of results to return. Default, and maximum, is 200.",
           "required": false
         },
         {
-          "name": "domain",
+          "name": "pageToken",
           "type": "String",
-          "info": "The domain name. Use this field to get fields from only one domain.",
+          "info": "Token to specify next page in the list",
           "required": false
+        }
+      ],
+      "vendorRequest": {
+        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/groups",
+        "method": "get",
+        "requestParameters": [
+          {
+            "type": "query",
+            "parameters": [
+              "customer",
+              "maxResults",
+              "pageToken"
+            ]
+          }
+        ],
+        "headers": {
+          "Authorization": "Bearer {$data['accessToken']}"
+        }
+      },
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "listGroupsByUserKey",
+      "description": "Retrieves a paginated list of groups in a domain.",
+      "args": [
+        {
+          "name": "accessToken",
+          "type": "String",
+          "info": "OAuth 2.0 token for the current user.",
+          "required": true
         },
         {
           "name": "maxResults",
@@ -1366,7 +1468,7 @@
           "name": "userKey",
           "type": "String",
           "info": "The userKey query parameter returns all groups for which a user or group has a membership.",
-          "required": false
+          "required": true
         }
       ],
       "vendorRequest": {
@@ -1376,8 +1478,6 @@
           {
             "type": "query",
             "parameters": [
-              "customer",
-              "domain",
               "maxResults",
               "pageToken",
               "userKey"
@@ -1401,7 +1501,7 @@
     },
     {
       "name": "updateGroup",
-      "description": "Creates a group.",
+      "description": "Updates a group.",
       "args": [
         {
           "name": "accessToken",
@@ -2997,7 +3097,10 @@
           "name": "calendarResourceId",
           "type": "String",
           "info": "The unique ID for the calendar resource.",
-          "required": true
+          "required": true,
+          "vendorSchema": {
+            "name": "resourceId"
+          }
         },
         {
           "name": "resourceDescription",
@@ -3021,7 +3124,8 @@
             "parameters": [
               "resourceName",
               "resourceDescription",
-              "resourceType"
+              "resourceType",
+              "resourceId"
             ]
           }
         ],
@@ -3303,7 +3407,7 @@
           "name": "roleId",
           "type": "String",
           "info": "The ID of the role that is assigned.",
-          "required": false
+          "required": true
         },
         {
           "name": "scopeType",
@@ -3313,7 +3417,7 @@
             "ORG_UNIT"
           ],
           "info": "The scope in which this role is assigned. ",
-          "required": false
+          "required": true
         }
       ],
       "vendorRequest": {
@@ -4795,6 +4899,16 @@
           "type": "String",
           "info": "Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.",
           "required": true
+        },
+        {
+          "name": "status",
+          "type": "Select",
+          "options": [
+            "true",
+            "false"
+          ],
+          "info": "Indicates the administrator status of the user.",
+          "required": true
         }
       ],
       "vendorRequest": {
@@ -4803,7 +4917,9 @@
         "requestParameters": [
           {
             "type": "json",
-            "parameters": []
+            "parameters": [
+              "status"
+            ]
           }
         ],
         "headers": {
@@ -5156,163 +5272,6 @@
       ]
     },
     {
-      "name": "watchUsers",
-      "description": "Watch for changes in users list",
-      "args": [
-        {
-          "name": "accessToken",
-          "type": "String",
-          "info": "OAuth 2.0 token for the current user.",
-          "required": true
-        },
-        {
-          "name": "customFieldMask",
-          "type": "List",
-          "structure": {
-            "name": "fieldMask",
-            "type": "String",
-            "info": "Single customFieldMask"
-          },
-          "info": "List of schema names. All fields from these schemas are fetched. This should only be set when projection=custom.",
-          "required": false,
-          "vendorSchema": {
-            "format": "toString:{,}"
-          }
-        },
-        {
-          "name": "customer",
-          "type": "String",
-          "info": "The unique ID for the customer's G Suite account. In case of a multi-domain account, to fetch all groups for a customer, fill this field instead of domain. ",
-          "required": false
-        },
-        {
-          "name": "domain",
-          "type": "String",
-          "info": "The domain name. Use this field to get fields from only one domain. ",
-          "required": false
-        },
-        {
-          "name": "event",
-          "type": "Select",
-          "options": [
-            "add",
-            "delete",
-            "makeAdmin",
-            "undelete",
-            "update"
-          ],
-          "info": "Events to watch for. ",
-          "required": false
-        },
-        {
-          "name": "projection",
-          "type": "Select",
-          "options": [
-            "BASIC",
-            "FULL",
-            "custom"
-          ],
-          "info": "Determines whether the response contains the full list of properties or only a subset. ",
-          "required": false
-        },
-        {
-          "name": "viewType",
-          "type": "Select",
-          "options": [
-            "admin_view",
-            "domain_public"
-          ],
-          "info": "Whether to fetch the administrator-only or domain-wide public view of the user. ",
-          "required": false
-        },
-        {
-          "name": "maxResults",
-          "type": "Number",
-          "info": "Maximum number of results to return. Default, and maximum, is 200.",
-          "required": false
-        },
-        {
-          "name": "pageToken",
-          "type": "String",
-          "info": "Token to specify next page in the list",
-          "required": false
-        },
-        {
-          "name": "orderBy",
-          "type": "Select",
-          "options": [
-            "email",
-            "familyName",
-            "givenName"
-          ],
-          "info": "Property to use for sorting results.",
-          "required": false
-        },
-        {
-          "name": "query",
-          "type": "String",
-          "info": "Query string for searching user fields.",
-          "required": false
-        },
-        {
-          "name": "sortOrder",
-          "type": "Select",
-          "options": [
-            "ASCENDING",
-            "DESCENDING"
-          ],
-          "info": "Whether to return results in ascending or descending order. Must be used with the orderBy parameter. ",
-          "required": false
-        },
-        {
-          "name": "showDeleted",
-          "type": "Select",
-          "options": [
-            "true",
-            "false"
-          ],
-          "info": "If set to true retrieves the list of deleted users. Default is false",
-          "required": false
-        }
-      ],
-      "vendorRequest": {
-        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/users",
-        "method": "get",
-        "requestParameters": [
-          {
-            "type": "query",
-            "parameters": [
-              "showDeleted",
-              "sortOrder",
-              "query",
-              "orderBy",
-              "pageToken",
-              "maxResults",
-              "domain",
-              "customer",
-              "customFieldMask",
-              "projection",
-              "viewType",
-              "event"
-            ]
-          }
-        ],
-        "headers": {
-          "Authorization": "Bearer {$data['accessToken']}"
-        }
-      },
-      "callbacks": [
-        {
-          "name": "error",
-          "info": "Error"
-        },
-        {
-          "name": "success",
-          "info": "Success"
-        }
-      ]
-    },
-    {
       "name": "deleteUserAlias",
       "description": "Removes an alias",
       "args": [
@@ -5487,165 +5446,6 @@
             "type": "json",
             "parameters": [
               "event"
-            ]
-          }
-        ],
-        "headers": {
-          "Authorization": "Bearer {$data['accessToken']}"
-        }
-      },
-      "callbacks": [
-        {
-          "name": "error",
-          "info": "Error"
-        },
-        {
-          "name": "success",
-          "info": "Success"
-        }
-      ]
-    },
-    {
-      "name": "deleteUserPhoto",
-      "description": "Removes the user's photo. ",
-      "args": [
-        {
-          "name": "accessToken",
-          "type": "String",
-          "info": "OAuth 2.0 token for the current user.",
-          "required": true
-        },
-        {
-          "name": "userKey",
-          "type": "String",
-          "info": "Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.",
-          "required": true
-        }
-      ],
-      "vendorRequest": {
-        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/users\/{$data['userKey']}\/photos\/thumbnail",
-        "method": "delete",
-        "requestParameters": [
-          {
-            "type": "query",
-            "parameters": []
-          }
-        ],
-        "headers": {
-          "Authorization": "Bearer {$data['accessToken']}"
-        }
-      },
-      "callbacks": [
-        {
-          "name": "error",
-          "info": "Error"
-        },
-        {
-          "name": "success",
-          "info": "Success"
-        }
-      ]
-    },
-    {
-      "name": "getUserPhoto",
-      "description": "Retrieves the user's photo. ",
-      "args": [
-        {
-          "name": "accessToken",
-          "type": "String",
-          "info": "OAuth 2.0 token for the current user.",
-          "required": true
-        },
-        {
-          "name": "userKey",
-          "type": "String",
-          "info": "Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.",
-          "required": true
-        }
-      ],
-      "vendorRequest": {
-        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/users\/{$data['userKey']}\/photos\/thumbnail",
-        "method": "get",
-        "requestParameters": [
-          {
-            "type": "query",
-            "parameters": []
-          }
-        ],
-        "headers": {
-          "Authorization": "Bearer {$data['accessToken']}"
-        }
-      },
-      "callbacks": [
-        {
-          "name": "error",
-          "info": "Error"
-        },
-        {
-          "name": "success",
-          "info": "Success"
-        }
-      ]
-    },
-    {
-      "name": "addUserPhoto",
-      "description": "Adds a photo for the user.",
-      "args": [
-        {
-          "name": "accessToken",
-          "type": "String",
-          "info": "OAuth 2.0 token for the current user.",
-          "required": true
-        },
-        {
-          "name": "userKey",
-          "type": "String",
-          "info": "Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.",
-          "required": true
-        },
-        {
-          "name": "height",
-          "type": "Number",
-          "info": "Height of the photo in pixels.",
-          "required": false
-        },
-        {
-          "name": "width",
-          "type": "Number",
-          "info": "Width of the photo in pixels.",
-          "required": false
-        },
-        {
-          "name": "mimeType",
-          "type": "Select",
-          "options": [
-            "JPEG",
-            "PNG",
-            "GIF",
-            "BMP",
-            "TIFF"
-          ],
-          "info": "The MIME type of the photo. Allowed values are JPEG, PNG, GIF, BMP, TIFF, and web-safe base64 encoding.",
-          "required": false
-        },
-        {
-          "name": "photoData",
-          "type": "String",
-          "info": "Photo file",
-          "required": false
-        }
-      ],
-      "vendorRequest": {
-        "url": "https:\/\/www.googleapis.com\/admin\/directory\/v1\/users\/{$data['userKey']}\/photos\/thumbnail",
-        "method": "patch",
-        "requestParameters": [
-          {
-            "type": "json",
-            "parameters": [
-              "photoData",
-              "mimeType",
-              "height",
-              "width"
             ]
           }
         ],

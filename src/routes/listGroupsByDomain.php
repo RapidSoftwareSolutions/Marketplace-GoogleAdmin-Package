@@ -1,10 +1,10 @@
 <?php
 
-$app->post('/api/GoogleAdmin/addDomainAlias', function ($request, $response) {
+$app->post('/api/GoogleAdmin/listGroupsByDomain', function ($request, $response) {
 
     $settings = $this->settings;
     $checkRequest = $this->validation;
-    $validateRes = $checkRequest->validate($request, ['accessToken','accountId','domainAliasName', 'parentDomainName']);
+    $validateRes = $checkRequest->validate($request, ['accessToken', 'domain']);
 
     if(!empty($validateRes) && isset($validateRes['callback']) && $validateRes['callback']=='error') {
         return $response->withHeader('Content-type', 'application/json')->withStatus(200)->withJson($validateRes);
@@ -12,10 +12,10 @@ $app->post('/api/GoogleAdmin/addDomainAlias', function ($request, $response) {
         $post_data = $validateRes;
     }
 
-    $requiredParams = ['accessToken'=>'accessToken','accountId'=>'accountId','domainAliasName'=>'domainAliasName','parentDomainName'=>'parentDomainName'];
-    $optionalParams = ['etag'=>'etag','kind'=>'kind'];
+    $requiredParams = ['accessToken'=>'accessToken', 'domain'=>'domain'];
+    $optionalParams = ['maxResults'=>'maxResults','pageToken'=>'pageToken'];
     $bodyParams = [
-       'json' => ['domainAliasName','etag','kind','parentDomainName']
+       'query' => ['domain','maxResults','pageToken']
     ];
 
     $data = \Models\Params::createParams($requiredParams, $optionalParams, $post_data['args']);
@@ -23,7 +23,7 @@ $app->post('/api/GoogleAdmin/addDomainAlias', function ($request, $response) {
     
 
     $client = $this->httpClient;
-    $query_str = "https://www.googleapis.com/admin/directory/v1/customer/{$data['accountId']}/domainaliases";
+    $query_str = "https://www.googleapis.com/admin/directory/v1/groups";
 
     
 
@@ -32,7 +32,7 @@ $app->post('/api/GoogleAdmin/addDomainAlias', function ($request, $response) {
      
 
     try {
-        $resp = $client->post($query_str, $requestParams);
+        $resp = $client->get($query_str, $requestParams);
         $responseBody = $resp->getBody()->getContents();
 
         if(in_array($resp->getStatusCode(), ['200', '201', '202', '203', '204'])) {

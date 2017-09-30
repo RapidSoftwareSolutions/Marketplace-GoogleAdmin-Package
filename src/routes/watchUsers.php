@@ -15,25 +15,21 @@ $app->post('/api/GoogleAdmin/watchUsers', function ($request, $response) {
     $requiredParams = ['accessToken'=>'accessToken'];
     $optionalParams = ['customFieldMask'=>'customFieldMask','customer'=>'customer','domain'=>'domain','event'=>'event','projection'=>'projection','viewType'=>'viewType','maxResults'=>'maxResults','pageToken'=>'pageToken','orderBy'=>'orderBy','query'=>'query','sortOrder'=>'sortOrder','showDeleted'=>'showDeleted'];
     $bodyParams = [
-       'query' => ['showDeleted','sortOrder','query','orderBy','pageToken','maxResults','domain','customer','customFieldMask','projection','viewType','event']
+       'json' => ['showDeleted','sortOrder','query','orderBy','pageToken','maxResults','domain','customer','customFieldMask','projection','viewType','event']
     ];
 
     $data = \Models\Params::createParams($requiredParams, $optionalParams, $post_data['args']);
 
-    
-    $data['customFieldMask'] = \Models\Params::toString($data['customFieldMask'], ','); 
+    if(!empty($data['customFieldMask'])) {
+        $data['customFieldMask'] = \Models\Params::toString($data['customFieldMask'], ',');
+    }
 
     $client = $this->httpClient;
-    $query_str = "https://www.googleapis.com/admin/directory/v1/users";
-
-    
-
+    $query_str = "https://www.googleapis.com/admin/directory/v1/users/watch";
     $requestParams = \Models\Params::createRequestBody($data, $bodyParams);
     $requestParams['headers'] = ["Authorization"=>"Bearer {$data['accessToken']}"];
-     
-
     try {
-        $resp = $client->get($query_str, $requestParams);
+        $resp = $client->post($query_str, $requestParams);
         $responseBody = $resp->getBody()->getContents();
 
         if(in_array($resp->getStatusCode(), ['200', '201', '202', '203', '204'])) {

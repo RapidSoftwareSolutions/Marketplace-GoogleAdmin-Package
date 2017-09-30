@@ -1,47 +1,44 @@
 <?php
 
-$app->post('/api/GoogleAdmin/updateUser', function ($request, $response) {
+$app->post('/api/GoogleAdmin/listGroupsByCustomer', function ($request, $response) {
 
     $settings = $this->settings;
     $checkRequest = $this->validation;
-    $validateRes = $checkRequest->validate($request, ['accessToken', 'userKey']);
+    $validateRes = $checkRequest->validate($request, ['accessToken', 'customer']);
 
-    if (!empty($validateRes) && isset($validateRes['callback']) && $validateRes['callback'] == 'error') {
+    if(!empty($validateRes) && isset($validateRes['callback']) && $validateRes['callback']=='error') {
         return $response->withHeader('Content-type', 'application/json')->withStatus(200)->withJson($validateRes);
     } else {
         $post_data = $validateRes;
     }
 
-    $requiredParams = ['accessToken' => 'accessToken', 'userKey' => 'userKey'];
-    $optionalParams = ['familyName' => 'familyName', 'givenName' => 'givenName', 'password' => 'password', 'primaryEmail' => 'primaryEmail', 'addresses' => 'addresses', 'changePasswordAtNextLogin' => 'changePasswordAtNextLogin', 'emails' => 'emails', 'externalIds' => 'externalIds', 'hashFunction' => 'hashFunction', 'ims' => 'ims', 'includeInGlobalAddressList' => 'includeInGlobalAddressList', 'ipWhitelisted' => 'ipWhitelisted', 'locations' => 'locations', 'notesContentType' => 'notesContentType', 'notesValue' => 'notesValue', 'orgUnitPath' => 'orgUnitPath', 'organizations' => 'organizations', 'phones' => 'phones', 'posixAccounts' => 'posixAccounts', 'relations' => 'relations', 'sshPublicKeys' => 'sshPublicKeys', 'suspended' => 'suspended', 'websites' => 'websites'];
+    $requiredParams = ['accessToken'=>'accessToken', 'customer'=>'customer'];
+    $optionalParams = ['maxResults'=>'maxResults','pageToken'=>'pageToken'];
     $bodyParams = [
-        'json' => ['websites', 'suspended', 'name', 'password', 'primaryEmail', 'addresses', 'changePasswordAtNextLogin', 'emails', 'externalIds', 'hashFunction', 'ims', 'includeInGlobalAddressList', 'ipWhitelisted', 'locations', 'notes', 'orgUnitPath', 'organizations', 'phones', 'posixAccounts', 'relations', 'sshPublicKeys']
+        'query' => ['customer','maxResults','pageToken']
     ];
 
     $data = \Models\Params::createParams($requiredParams, $optionalParams, $post_data['args']);
 
 
+
     $client = $this->httpClient;
-    $query_str = "https://www.googleapis.com/admin/directory/v1/users/{$data['userKey']}";
-    if (strlen($data['notesValue']) > 0) {
-        $data['notes']['ContentType'] = $data['notesContentType'];
-        $data['notes']['value'] = $data['notesValue'];
-    }
-    $data['name']['familyName'] = $data['familyName'];
-    $data['name']['givenName'] = $data['givenName'];
+    $query_str = "https://www.googleapis.com/admin/directory/v1/groups";
+
+
 
     $requestParams = \Models\Params::createRequestBody($data, $bodyParams);
-    $requestParams['headers'] = ["Authorization" => "Bearer {$data['accessToken']}"];
+    $requestParams['headers'] = ["Authorization"=>"Bearer {$data['accessToken']}"];
 
 
     try {
-        $resp = $client->patch($query_str, $requestParams);
+        $resp = $client->get($query_str, $requestParams);
         $responseBody = $resp->getBody()->getContents();
 
-        if (in_array($resp->getStatusCode(), ['200', '201', '202', '203', '204'])) {
+        if(in_array($resp->getStatusCode(), ['200', '201', '202', '203', '204'])) {
             $result['callback'] = 'success';
             $result['contextWrites']['to'] = is_array($responseBody) ? $responseBody : json_decode($responseBody);
-            if (empty($result['contextWrites']['to'])) {
+            if(empty($result['contextWrites']['to'])) {
                 $result['contextWrites']['to']['status_msg'] = "Api return no results";
             }
         } else {
@@ -53,7 +50,7 @@ $app->post('/api/GoogleAdmin/updateUser', function ($request, $response) {
     } catch (\GuzzleHttp\Exception\ClientException $exception) {
 
         $responseBody = $exception->getResponse()->getBody()->getContents();
-        if (empty(json_decode($responseBody))) {
+        if(empty(json_decode($responseBody))) {
             $out = $responseBody;
         } else {
             $out = json_decode($responseBody);
@@ -65,7 +62,7 @@ $app->post('/api/GoogleAdmin/updateUser', function ($request, $response) {
     } catch (GuzzleHttp\Exception\ServerException $exception) {
 
         $responseBody = $exception->getResponse()->getBody()->getContents();
-        if (empty(json_decode($responseBody))) {
+        if(empty(json_decode($responseBody))) {
             $out = $responseBody;
         } else {
             $out = json_decode($responseBody);

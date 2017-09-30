@@ -12,10 +12,10 @@ $app->post('/api/GoogleAdmin/addCalendarResource', function ($request, $response
         $post_data = $validateRes;
     }
 
-    $requiredParams = ['accessToken'=>'accessToken','accountId'=>'accountId','resourceName'=>'resourceName', 'calendarResourceId'=> 'calendarResourceId'];
+    $requiredParams = ['accessToken'=>'accessToken','accountId'=>'accountId','resourceName'=>'resourceName', 'calendarResourceId'=> 'resourceId'];
     $optionalParams = ['resourceDescription'=>'resourceDescription','resourceType'=>'resourceType'];
     $bodyParams = [
-       'json' => ['resourceName','resourceDescription','resourceType', 'calendarResourceId']
+       'json' => ['resourceName','resourceDescription','resourceType', 'resourceId']
     ];
 
     $data = \Models\Params::createParams($requiredParams, $optionalParams, $post_data['args']);

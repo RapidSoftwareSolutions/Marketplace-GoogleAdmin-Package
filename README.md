@@ -13,7 +13,6 @@ Use the Admin API to create and manage users and groups for a domain, along with
 4. If your project has no API key for the server, create it now - **Add credentials > API key > Server key**;
 
 
-
 ## Custom datatypes: 
  |Datatype|Description|Example
  |--------|-----------|----------
@@ -102,7 +101,7 @@ Retrieves a paginated list of Chrome OS devices within an account
 | orgUnitPath| String| The full path of the organization unit or its unique ID.
 | pageToken  | String| The pageToken query parameter is used to request the next page of query results. 
 | projection | Select| Determines whether the response contains the full list of properties or only a subset. 
-| query      | String| Search string in the format given at View device information and organizational units (https://support.google.com/chrome/a/answer/1698333?hl=en)
+| query      | String| Search string in the format given at View device information and organizational units
 | sortOrder  | Select| Whether to return results in ascending or descending order. Must be used with the orderBy parameter. 
 
 ## GoogleAdmin.moveChromeosDevicesToOu
@@ -147,7 +146,7 @@ Updates a customer.
 | alternateEmail| String| The customer's secondary contact email address. This email address cannot be on the same domain as the customerDomain
 | customerDomain| String| The customer's primary domain name string. Do not include the www prefix when creating a new customer.
 | etag          | String| ETag of the resource.
-| language      | String| The customer's ISO 639-2 language code. See the Language Codes page for the list of supported codes. Valid language codes outside the supported set will be accepted by the API but may lead to unexpected behavior. The default value is en.
+| language      | String| The customer's ISO 639-2 language code. See the Language Codes page for the list of supported codes. Valid language codes outside the supported set will be accepted by the API but may lead to unexpected behavior. The default value is en. https://developers.google.com/admin-sdk/directory/v1/languages
 | phoneNumber   | String| The customer's contact phone number in E.164 format.
 | postalAddress | JSON  | The JSON object with customer's postal address information.
 
@@ -251,20 +250,38 @@ Creates a group.
 | description| String| An extended description to help users determine the purpose of a group. 
 | name       | String| The group's display name.
 
-## GoogleAdmin.listGroups
+## GoogleAdmin.listGroupsByDomain
+Retrieves a paginated list of groups in a domain.
+
+| Field      | Type  | Description
+|------------|-------|----------
+| accessToken| String| OAuth 2.0 token for the current user.
+| domain     | String| The domain name. Use this field to get fields from only one domain.
+| maxResults | Number| Maximum number of results to return. Default, and maximum, is 200.
+| pageToken  | String| Token to specify next page in the list
+
+## GoogleAdmin.listGroupsByCustomer
 Retrieves a paginated list of groups in a domain.
 
 | Field      | Type  | Description
 |------------|-------|----------
 | accessToken| String| OAuth 2.0 token for the current user.
 | customer   | String| The group's display name.
-| domain     | String| The domain name. Use this field to get fields from only one domain.
+| maxResults | Number| Maximum number of results to return. Default, and maximum, is 200.
+| pageToken  | String| Token to specify next page in the list
+
+## GoogleAdmin.listGroupsByUserKey
+Retrieves a paginated list of groups in a domain.
+
+| Field      | Type  | Description
+|------------|-------|----------
+| accessToken| String| OAuth 2.0 token for the current user.
 | maxResults | Number| Maximum number of results to return. Default, and maximum, is 200.
 | pageToken  | String| Token to specify next page in the list
 | userKey    | String| The userKey query parameter returns all groups for which a user or group has a membership.
 
 ## GoogleAdmin.updateGroup
-Creates a group.
+Updates a group.
 
 | Field      | Type  | Description
 |------------|-------|----------
@@ -325,10 +342,10 @@ Adds a user to the specified group.
 |------------|-------|----------
 | accessToken| String| OAuth 2.0 token for the current user.
 | groupKey   | String| Identifies the group in the API request. The value can be the group's email address, group alias, or the unique group ID.
-| memberKey   | String| Id of the member
-| email   | String| Email of the member
-| type   | String| The type of group member. 
+| memberKey  | String| Identifies the group in the API request. The value can be the group's email address, group alias, or the unique group ID.
+| email      | String| Member email address
 | role       | Select| The member's role in a group. The API returns an error for cycles in group memberships. For example, if group1 is a member of group2, group2 cannot be a member of group1.
+| type       | Select| The type of group member. 
 
 ## GoogleAdmin.listMembers
 Retrieves a paginated list of all members in a group.
@@ -350,8 +367,8 @@ Retrieves a group member's properties.
 | groupKey   | String| Identifies the group in the API request. The value can be the group's email address, group alias, or the unique group ID.
 | memberKey  | String| Identifies the group member in the API request. A group member can be a user or another group. The value can be the member's (group or user) primary email address, alias, or unique ID.
 | role       | Select| The member's role in a group. The API returns an error for cycles in group memberships. For example, if group1 is a member of group2, group2 cannot be a member of group1.
-| email   | String| Email of the member
-| type   | String| The type of group member. 
+| email      | String| Member email address
+| type       | Select| The type of group member. 
 
 ## GoogleAdmin.makeActionOnMobileDevice
 Takes an action that affects a mobile device. 
@@ -539,8 +556,8 @@ Inserts a calendar resource.
 |--------------------|-------|----------
 | accessToken        | String| OAuth 2.0 token for the current user.
 | accountId          | String| The unique ID for the customer's G Suite account. The customerId is also returned as part of the Users resource.
-| calendarResourceId | String| The unique ID of the calendar resource to delete.
 | resourceName       | String| The name of the calendar resource. For example, Training Room 1A
+| calendarResourceId | String| The unique ID for the calendar resource.
 | resourceDescription| String| The brief description of the calendar resource.
 | resourceType       | String| The type of the calendar resource. Used for grouping resources in the calendar user interface.
 
@@ -823,6 +840,7 @@ Makes a user a super administrator.
 |------------|-------|----------
 | accessToken| String| OAuth 2.0 token for the current user.
 | userKey    | String| Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.
+| status     | Select| Indicates the administrator status of the user.
 
 ## GoogleAdmin.updateUser
 Updates a user using patch semantics.
@@ -863,25 +881,6 @@ Undeletes a deleted user.
 | accessToken| String| OAuth 2.0 token for the current user.
 | userKey    | String| Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.
 
-## GoogleAdmin.watchUsers
-Watch for changes in users list
-
-| Field          | Type  | Description
-|----------------|-------|----------
-| accessToken    | String| OAuth 2.0 token for the current user.
-| customFieldMask| List  | List of schema names. All fields from these schemas are fetched. This should only be set when projection=custom.
-| customer       | String| The unique ID for the customer's G Suite account. In case of a multi-domain account, to fetch all groups for a customer, fill this field instead of domain. 
-| domain         | String| The domain name. Use this field to get fields from only one domain. 
-| event          | Select| Events to watch for. 
-| projection     | Select| Determines whether the response contains the full list of properties or only a subset. 
-| viewType       | Select| Whether to fetch the administrator-only or domain-wide public view of the user. 
-| maxResults     | Number| Maximum number of results to return. Default, and maximum, is 200.
-| pageToken      | String| Token to specify next page in the list
-| orderBy        | Select| Property to use for sorting results.
-| query          | String| Query string for searching user fields.
-| sortOrder      | Select| Whether to return results in ascending or descending order. Must be used with the orderBy parameter. 
-| showDeleted    | Select| If set to true retrieves the list of deleted users. Default is false
-
 ## GoogleAdmin.deleteUserAlias
 Removes an alias
 
@@ -916,34 +915,6 @@ Watch for changes in user aliases list
 | accessToken| String| OAuth 2.0 token for the current user.
 | userKey    | String| Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.
 | event      | Select| Events to watch for. 
-
-## GoogleAdmin.deleteUserPhoto
-Removes the user's photo. 
-
-| Field      | Type  | Description
-|------------|-------|----------
-| accessToken| String| OAuth 2.0 token for the current user.
-| userKey    | String| Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.
-
-## GoogleAdmin.getUserPhoto
-Retrieves the user's photo. 
-
-| Field      | Type  | Description
-|------------|-------|----------
-| accessToken| String| OAuth 2.0 token for the current user.
-| userKey    | String| Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.
-
-## GoogleAdmin.addUserPhoto
-Adds a photo for the user.
-
-| Field      | Type  | Description
-|------------|-------|----------
-| accessToken| String| OAuth 2.0 token for the current user.
-| userKey    | String| Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.
-| height     | Number| Height of the photo in pixels.
-| width      | Number| Width of the photo in pixels.
-| mimeType   | Select| The MIME type of the photo. Allowed values are JPEG, PNG, GIF, BMP, TIFF, and web-safe base64 encoding.
-| photoData  | String| Photo file
 
 ## GoogleAdmin.getUserVerificationCode
 Generate new backup verification codes for the user.

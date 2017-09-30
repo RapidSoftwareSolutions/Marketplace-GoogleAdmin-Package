@@ -4,7 +4,7 @@ $app->post('/api/GoogleAdmin/addUserPhoto', function ($request, $response) {
 
     $settings = $this->settings;
     $checkRequest = $this->validation;
-    $validateRes = $checkRequest->validate($request, ['accessToken','userKey']);
+    $validateRes = $checkRequest->validate($request, ['accessToken','userKey', 'photoData']);
 
     if(!empty($validateRes) && isset($validateRes['callback']) && $validateRes['callback']=='error') {
         return $response->withHeader('Content-type', 'application/json')->withStatus(200)->withJson($validateRes);
@@ -12,21 +12,18 @@ $app->post('/api/GoogleAdmin/addUserPhoto', function ($request, $response) {
         $post_data = $validateRes;
     }
 
-    $requiredParams = ['accessToken'=>'accessToken','userKey'=>'userKey'];
-    $optionalParams = ['height'=>'height','width'=>'width','mimeType'=>'mimeType','photoData'=>'photoData'];
+    $requiredParams = ['accessToken'=>'accessToken','userKey'=>'userKey','photoData'=>'photoData'];
+    $optionalParams = ['height'=>'height','width'=>'width','mimeType'=>'mimeType'];
     $bodyParams = [
        'json' => ['photoData','mimeType','height','width']
     ];
 
     $data = \Models\Params::createParams($requiredParams, $optionalParams, $post_data['args']);
 
-    
+    $data['photo']['photoData'] =rtrim(strtr(base64_encode(file_get_contents($data['photoData'])), '+/', '-_'), '=');
 
     $client = $this->httpClient;
     $query_str = "https://www.googleapis.com/admin/directory/v1/users/{$data['userKey']}/photos/thumbnail";
-
-    
-
     $requestParams = \Models\Params::createRequestBody($data, $bodyParams);
     $requestParams['headers'] = ["Authorization"=>"Bearer {$data['accessToken']}"];
      

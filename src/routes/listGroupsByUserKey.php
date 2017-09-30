@@ -1,10 +1,10 @@
 <?php
 
-$app->post('/api/GoogleAdmin/listGroups', function ($request, $response) {
+$app->post('/api/GoogleAdmin/listGroupsByUserKey', function ($request, $response) {
 
     $settings = $this->settings;
     $checkRequest = $this->validation;
-    $validateRes = $checkRequest->validate($request, ['accessToken']);
+    $validateRes = $checkRequest->validate($request, ['accessToken', 'userKey']);
 
     if(!empty($validateRes) && isset($validateRes['callback']) && $validateRes['callback']=='error') {
         return $response->withHeader('Content-type', 'application/json')->withStatus(200)->withJson($validateRes);
@@ -12,24 +12,24 @@ $app->post('/api/GoogleAdmin/listGroups', function ($request, $response) {
         $post_data = $validateRes;
     }
 
-    $requiredParams = ['accessToken'=>'accessToken'];
-    $optionalParams = ['customer'=>'customer','domain'=>'domain','maxResults'=>'maxResults','pageToken'=>'pageToken','userKey'=>'userKey'];
+    $requiredParams = ['accessToken'=>'accessToken', 'userKey'=>'userKey'];
+    $optionalParams = ['maxResults'=>'maxResults','pageToken'=>'pageToken'];
     $bodyParams = [
-       'query' => ['customer','domain','maxResults','pageToken','userKey']
+        'query' => ['domain','maxResults','pageToken','userKey']
     ];
 
     $data = \Models\Params::createParams($requiredParams, $optionalParams, $post_data['args']);
 
-    
+
 
     $client = $this->httpClient;
     $query_str = "https://www.googleapis.com/admin/directory/v1/groups";
 
-    
+
 
     $requestParams = \Models\Params::createRequestBody($data, $bodyParams);
     $requestParams['headers'] = ["Authorization"=>"Bearer {$data['accessToken']}"];
-     
+
 
     try {
         $resp = $client->get($query_str, $requestParams);
