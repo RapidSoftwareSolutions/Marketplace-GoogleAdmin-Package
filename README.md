@@ -261,7 +261,7 @@ Retrieves a paginated list of groups in a domain.
 | pageToken  | String| Token to specify next page in the list
 
 ## GoogleAdmin.listGroupsByCustomer
-Retrieves a paginated list of groups in a domain.
+Retrieves a paginated list of groups by customer.
 
 | Field      | Type  | Description
 |------------|-------|----------
@@ -271,7 +271,7 @@ Retrieves a paginated list of groups in a domain.
 | pageToken  | String| Token to specify next page in the list
 
 ## GoogleAdmin.listGroupsByUserKey
-Retrieves a paginated list of groups in a domain.
+Retrieves a paginated list of groups by user key.
 
 | Field      | Type  | Description
 |------------|-------|----------
@@ -705,6 +705,24 @@ Create schema.
 | schemaName | String| Name of the schema.
 | fields     | List  | A list of fields in the schema.
 
+```
+Sample of single field
+{
+      "kind": "admin#directory#schema#fieldspec",
+      "fieldId": string,
+      "etag": etag,
+      "fieldType": string,
+      "fieldName": string,
+      "multiValued": boolean,
+      "readAccessType": string,
+      "indexed": boolean,
+      "numericIndexingSpec": {
+        "minValue": double,
+        "maxValue": double
+      }
+    }
+```
+
 ## GoogleAdmin.listSchemas
 Retrieve all schemas for a customer
 
@@ -723,6 +741,25 @@ Update schema.
 | schemaId   | String| Name or immutable ID of the schema.
 | schemaName | String| Name of the schema.
 | fields     | List  | A list of fields in the schema.
+
+
+```
+Sample of single field
+{
+      "kind": "admin#directory#schema#fieldspec",
+      "fieldId": string,
+      "etag": etag,
+      "fieldType": string,
+      "fieldName": string,
+      "multiValued": boolean,
+      "readAccessType": string,
+      "indexed": boolean,
+      "numericIndexingSpec": {
+        "minValue": double,
+        "maxValue": double
+      }
+    }
+```
 
 ## GoogleAdmin.deleteToken
 Delete all access tokens issued by a user for an application. 
@@ -840,7 +877,6 @@ Makes a user a super administrator.
 |------------|-------|----------
 | accessToken| String| OAuth 2.0 token for the current user.
 | userKey    | String| Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.
-| status     | Select| Indicates the administrator status of the user.
 
 ## GoogleAdmin.updateUser
 Updates a user using patch semantics.

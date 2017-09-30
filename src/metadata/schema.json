@@ -745,7 +745,7 @@
         {
           "name": "language",
           "type": "String",
-          "info": "The customer's ISO 639-2 language code. See the Language Codes page for the list of supported codes. Valid language codes outside the supported set will be accepted by the API but may lead to unexpected behavior. The default value is en. https://developers.google.com/admin-sdk/directory/v1/languages",
+          "info": "The customer's ISO 639-2 language code. See the Language Codes page for the list of supported codes. Valid language codes outside the supported set will be accepted by the API but may lead to unexpected behavior. The default value is en.",
           "required": false
         },
         {
@@ -1387,7 +1387,7 @@
     },
     {
       "name": "listGroupsByCustomer",
-      "description": "Retrieves a paginated list of groups in a domain.",
+      "description": "Retrieves a paginated list of groups by customer.",
       "args": [
         {
           "name": "accessToken",
@@ -1444,7 +1444,7 @@
     },
     {
       "name": "listGroupsByUserKey",
-      "description": "Retrieves a paginated list of groups in a domain.",
+      "description": "Retrieves a paginated list of groups by user key",
       "args": [
         {
           "name": "accessToken",
@@ -2250,7 +2250,7 @@
         {
           "name": "query",
           "type": "String",
-          "info": "Search string in the format given at View device information and organizational units (https:\/\/support.google.com\/chrome\/a\/answer\/1698333?hl=en)",
+          "info": "Search string in the format given at View device information and organizational units",
           "required": false
         },
         {
@@ -4899,16 +4899,6 @@
           "type": "String",
           "info": "Identifies the user in the API request. The value can be the user's primary email address, alias email address, or unique user ID.",
           "required": true
-        },
-        {
-          "name": "status",
-          "type": "Select",
-          "options": [
-            "true",
-            "false"
-          ],
-          "info": "Indicates the administrator status of the user.",
-          "required": true
         }
       ],
       "vendorRequest": {
@@ -4918,7 +4908,6 @@
           {
             "type": "json",
             "parameters": [
-              "status"
             ]
           }
         ],
